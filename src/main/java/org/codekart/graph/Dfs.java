@@ -2,7 +2,9 @@ package org.codekart.graph;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class Dfs {
     
@@ -12,7 +14,6 @@ public class Dfs {
 // https://leetcode.com/problems/pacific-atlantic-water-flow/
 
 class Solution {
-
     // main function
     public static void main(String[] args) {
         Solution solution = new Solution();
@@ -82,6 +83,95 @@ class Solution {
 
     }
 
+
+    private static class NumberOfIslands {
+
+        public static void main(String[] args) {
+            char[][] grid = {{'1','1','1','1','0'},{'1','1','0','1','0'},{'1','1','0','0','0'},{'0','0','0','0','0'}};
+            System.out.println(numIslands(grid));
+        }
+
+        private static final int[][] dirs = new int[][]{{1,0}, {-1,0}, {0,1}, {0,-1}};
+
+        private static int numIslands(char[][] grid) {
+            int rows = grid.length;
+            int cols = grid[0].length;
+            boolean[][] visited = new boolean[rows][cols];
+            int islands = 0;
+            for(int i=0;i<rows;i++) {
+                for(int j=0;j<cols;j++) {
+                    if(grid[i][j] == '1' && !visited[i][j]) {
+                        dfs(grid, i, j, visited, rows, cols);
+                        islands++;
+                    }
+                }
+            }
+            return islands;
+        }
+
+        private static void dfs(char[][] grid, int row, int col, boolean[][] visited, int rows, int cols) {
+            visited[row][col] = true;
+
+            for(int[] dir : dirs) {
+                int nrow = row + dir[0];
+                int ncol = col + dir[1];
+
+                if(nrow >=0 && nrow < rows && ncol >=0 && ncol < cols 
+                    && !visited[nrow][ncol] && grid[nrow][ncol] == '1') {
+                        dfs(grid, nrow, ncol, visited, rows, cols);
+                    }
+            }
+        }
+    }
+
+    // review this again....
+    private static class UnreachablePairsOfNodesInAnUndirectedGraph {
+
+        private static int componentSize = 0;
+
+        public static void main(String[] args) {
+            int n = 7;
+            int[][] edges = {{0,2},{0,5},{5,4}, {2,4}, {1,6}};
+            System.out.println(countPairs(n, edges));
+        }
+
+        private static int countPairs(int n, int[][] edges) {
+            List<List<Integer>> graph = new ArrayList<>();
+            for(int i=0;i<n;i++) {
+                graph.add(new ArrayList<>());
+            }
+
+            for(int[] edge : edges) {
+                graph.get(edge[0]).add(edge[1]);
+                graph.get(edge[1]).add(edge[0]);
+            }
+
+            boolean[] visited = new boolean[n];
+            
+            int totalUnreachablePairs = 0;
+            for(int i=0;i<n;i++) {
+                if(!visited[i]) {
+                    componentSize = 0; // Reset componentSize before each DFS
+                    dfs(graph, i, visited);
+                    totalUnreachablePairs += componentSize * (n - componentSize);
+                    n = n - componentSize;
+                }
+            }
+            return totalUnreachablePairs;
+        }
+
+        private static void dfs(List<List<Integer>> graph, int node, boolean[] visited) {
+            visited[node] = true;
+            componentSize++;
+
+            for(int neighbor : graph.get(node)) {
+                if(!visited[neighbor]) {
+                    dfs(graph, neighbor, visited);
+                }
+            }
+        }   
+        
+    }
+
    
 }
- 

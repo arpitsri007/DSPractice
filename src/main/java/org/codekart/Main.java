@@ -3,8 +3,7 @@ package org.codekart;
 import org.codekart.Arrays.MergeArray;
 
 import java.util.Arrays;
-import java.util.Deque;
-import java.util.LinkedList;
+
 
 public class Main {
     public static void main(String[] args) {

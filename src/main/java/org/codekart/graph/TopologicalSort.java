@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Stack;
 
 
 // Kahn's Algorithm
@@ -50,6 +51,34 @@ public class TopologicalSort {
         }
 
         return result;
+    }
+
+    private static List<Integer> topologicalSortUsingDFS(List<List<Integer>> graph) {
+       // implement using stack
+       Stack<Integer> stack = new Stack<>();
+       boolean[] visited = new boolean[graph.size()];
+
+        for (int i = 0; i < graph.size(); i++) {
+            if (!visited[i]) {
+                dfs(graph, i, visited, stack);
+            }
+        }
+
+        List<Integer> result = new ArrayList<>();
+        while (!stack.isEmpty()) {
+            result.add(stack.pop());
+        }
+        return result;
+    }
+
+    private static void dfs(List<List<Integer>> graph, int current, boolean[] visited, Stack<Integer> stack) {
+        visited[current] = true;
+        for (int neighbor : graph.get(current)) {
+            if (!visited[neighbor]) {
+                dfs(graph, neighbor, visited, stack);
+            }
+        }
+        stack.push(current);
     }
 
     private static int[] calculateIndegree(List<List<Integer>> graph) {
@@ -99,11 +128,15 @@ public class TopologicalSort {
         graph.add(Arrays.asList(1, 2));
         graph.add(Arrays.asList(3));
         graph.add(Arrays.asList(3));
-        graph.add(Arrays.asList(0));
+
         graph.add(Arrays.asList());
 
         List<Integer> result = topologicalSort(graph);
         System.out.println(result);
+
+        List<Integer> resultUsingDFS = topologicalSortUsingDFS(graph);
+        System.out.println(resultUsingDFS);
+        
 
         System.out.println("Is Cycle in Directed Graph Using BFS: " + isCycleInDirectedGraphUsingBFS(graph));
     }

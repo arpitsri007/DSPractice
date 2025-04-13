@@ -169,8 +169,7 @@ public class Basics {
                 if(isCycleInDirectedGraphUsingDFS(graph, v, visited, recStack)) {
                     return true;
                 }
-            }
-            else if(recStack[v]) {
+            } else if(recStack[v]) {
                 return true;
             }
         }
