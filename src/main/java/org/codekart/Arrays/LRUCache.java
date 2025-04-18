@@ -1,9 +1,9 @@
-package org.codekart.Arrays;
+package org.codekart.arrays;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.codekart.Arrays.DoublyLinkedList.Node;
+import org.codekart.arrays.DoublyLinkedList.Node;
 
 class DoublyLinkedList {
 

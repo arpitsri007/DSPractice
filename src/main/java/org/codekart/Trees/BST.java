@@ -1,4 +1,4 @@
-package org.codekart.Trees;
+package org.codekart.trees;
 
 import java.util.LinkedList;
 import java.util.Queue;

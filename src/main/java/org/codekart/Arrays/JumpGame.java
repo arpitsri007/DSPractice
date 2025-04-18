@@ -1,4 +1,4 @@
-package org.codekart.Arrays;
+package org.codekart.arrays;
 
 public class JumpGame {
     /*  You are given a 0-indexed array of integers nums of length n. You are initially positioned at nums[0].

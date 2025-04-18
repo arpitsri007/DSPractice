@@ -1,4 +1,4 @@
-package org.codekart.Trie;
+package org.codekart.trie;
 
 public class TrieNode {
     public TrieNode[] children;

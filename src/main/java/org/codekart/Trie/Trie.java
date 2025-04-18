@@ -1,4 +1,4 @@
-package org.codekart.Trie;
+package org.codekart.trie;
 
 
 class Trie {

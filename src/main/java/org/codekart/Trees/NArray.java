@@ -1,4 +1,4 @@
-package org.codekart.Trees;
+package org.codekart.trees;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +41,6 @@ public class NArray {
     }
 
     // time needed to inform all employees - leetcode 1376
-
     private int maxTime = 0;
     public int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
         if(n == 0) return 0;

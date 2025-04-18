@@ -1,8 +1,8 @@
 package org.codekart;
 
-import org.codekart.Arrays.MergeArray;
-
 import java.util.Arrays;
+
+import org.codekart.arrays.MergeArray;
 
 
 public class Main {

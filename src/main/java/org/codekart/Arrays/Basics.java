@@ -1,4 +1,4 @@
-package org.codekart.Arrays;
+package org.codekart.arrays;
 
 import java.util.ArrayList;
 import java.util.Arrays;
