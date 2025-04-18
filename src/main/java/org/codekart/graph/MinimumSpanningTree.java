@@ -3,11 +3,6 @@ package org.codekart.graph;
 import java.util.Arrays;
 import java.util.PriorityQueue;
 
-// Kruskal's algorithm:
-// 1. Sort all the edges in non-decreasing order of their weight.
-// 2. Pick the smallest edge. Check if it forms a cycle with the spanning tree formed so far. If cycle is not formed, include this edge. Else, discard it.
-// 3. Repeat step 2 until there are (V-1) edges in the spanning tree.
-
 // What is Spanning Tree:
 // Graph should be connected
 // Graph should have V-1 edges
@@ -109,15 +104,41 @@ public class MinimumSpanningTree {
                 graph[i][j] = Math.abs(points[i][0] - points[j][0]) + Math.abs(points[i][1] - points[j][1]);
             }
         }
-        return prim(graph);
+        return kruskal(graph);
     }
 
     // Kruskal's algorithm:
     public int kruskal(int[][] graph) {
+        // 1. Sort all the edges in ascending order of their weight.
+        // 2. Pick the smallest edge. Check if it forms a cycle with the spanning tree formed so far. If cycle is not formed, include this edge. Else, discard it.
+        // 3. Repeat step 2 until there are (V-1) edges in the spanning tree.
         int n = graph.length;
         int[] parent = new int[n];
-        boolean[] inMst = new boolean[n];
-        Arrays.fill(parent, -1);
-        Arrays.fill(inMst, false);
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+        }
+        int[] rank = new int[n];
+        Arrays.fill(rank, 0);
+
+        int sum = 0;
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[0] - b[0]);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (graph[i][j] != Integer.MAX_VALUE) {
+                    pq.add(new int[] { graph[i][j], i, j });
+                }
+            }
+        }
+        while (!pq.isEmpty()) {
+            int[] edge = pq.poll();
+            int weight = edge[0];
+            int source = edge[1];
+            int dest = edge[2];
+            if (Disjointset.findWithPathCompression(parent, source) != Disjointset.findWithPathCompression(parent, dest)) {
+                Disjointset.unionWithRank(parent, rank, source, dest);
+                sum += weight;
+            }
+        }
+        return sum;
     }
 }

@@ -39,14 +39,14 @@ public class Disjointset {
     }
 
     // Rank and Path Compression
-    private static int findWithPathCompression(int[] parent, int x) {
+    protected static int findWithPathCompression(int[] parent, int x) {
         if (parent[x] == x) {
             return x;
         }
         return parent[x] = findWithPathCompression(parent, parent[x]);
     }
 
-    private static void unionWithRank(int[] parent, int[] rank, int x, int y) {
+    protected static void unionWithRank(int[] parent, int[] rank, int x, int y) {
         int xRoot = findWithPathCompression(parent, x);
         int yRoot = findWithPathCompression(parent, y);
         if (rank[xRoot] < rank[yRoot]) {
