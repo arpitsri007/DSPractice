@@ -13,6 +13,7 @@ import java.util.Stack;
 public class TopologicalSort {
 
     // create indegree array
+            // Example: u --> v <--- x  :: indegree of v is 2 and indegree of x and u is 0 so correct topological sort is u, x, v / x, u, v
     // create queue
     // add all nodes with indegree 0 to queue
     // while queue is not empty

@@ -59,6 +59,20 @@ public class Disjointset {
         }
     }
 
+    // DSU by size
+    protected static void unionBySize(int[] parent, int[] size, int x, int y) {
+        int xRoot = findWithPathCompression(parent, x);
+        int yRoot = findWithPathCompression(parent, y);
+        if (size[xRoot] < size[yRoot]) {
+            parent[xRoot] = yRoot;
+            size[yRoot] += size[xRoot];
+        } else {
+            parent[yRoot] = xRoot;
+            size[xRoot] += size[yRoot];
+        }
+    }
+    
+
     private static boolean detectCycleInUndirectedGraphUsingDisjointSet(int[][] graph) {
         int[] parent = new int[graph.length];
         int[] rank = new int[graph.length];
@@ -146,7 +160,6 @@ public class Disjointset {
             return components - 1;           
         }
     }
-
 
     public static class NumberOfProvinces {
 
