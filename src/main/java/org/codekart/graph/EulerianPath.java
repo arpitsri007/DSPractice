@@ -1,5 +1,9 @@
 package org.codekart.graph;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+
 public class EulerianPath {
     // Eulerian Path is a path in a graph that visits all the edges and every edge
     // exactly once.
@@ -40,17 +44,17 @@ public class EulerianPath {
 
     public static void main(String[] args) {
         int[][] graph = { { 0, 1, 0, 1 }, { 1, 0, 1, 0 }, { 0, 1, 0, 1 }, { 1, 0, 1, 0 } };
-        System.out.println(findEulerianPathOrCircuit(graph));
+        System.out.println(findIsEulerianPathOrCircuit(graph));
     }
 
     // Check if all vertices with non-zero degree belong to a single connected
     // if all vertices with even degree in a connected graph, then Eulerian circuit
-    private static String findEulerianPathOrCircuit(int[][] graph) {
+    private static boolean findIsEulerianPathOrCircuit(int[][] graph) {
         int n = graph.length;
         int[] degree = calculateDegree(graph);
 
         if (!isConnected(graph, degree)) {
-            return "Not connected";
+            return false;
         }
 
         int oddDegreeCount = 0;
@@ -61,12 +65,11 @@ public class EulerianPath {
         }
 
         if (oddDegreeCount == 0) {
-            return "Eulerian Circuit";
+            return true;
         } else if (oddDegreeCount == 2) {
-            return "Eulerian Path";
+            return true;
         }
-        return "Not Eulerian";
-
+        return false;
     }
 
     private static int[] calculateDegree(int[][] graph) {
@@ -111,4 +114,75 @@ public class EulerianPath {
             }
         }
     }
+
+    // Find Eulerian Path or Circuit in  directed graph
+    private static void findEulerianPathOrCircuit(int[][] graph) {
+        int n = graph.length;
+        int[] inDegree = new int[n];
+        int[] outDegree = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (graph[i][j] != 0) {
+                    outDegree[i]++;
+                    inDegree[j]++;
+                }
+            }
+        }
+
+        // source vertex => i inDegree[i] == outDegree[i] + 1
+        // sink vertex => i outDegree[i] == inDegree[i] + 1
+        // other vertices => inDegree[i] == outDegree[i]
+
+        int source = -1;
+        int sink = -1;
+        int oddDegreeCount = 0;
+        for (int i = 0; i < n; i++) {
+            if (inDegree[i] == outDegree[i] + 1) {
+                sink = i;
+                oddDegreeCount++;
+            } else if (inDegree[i] == outDegree[i] - 1) {
+                source = i;
+                oddDegreeCount++;
+            } 
+        }
+
+        if (oddDegreeCount == 0) {
+            source = 0;
+            sink = 0;
+            System.out.println("Eulerian Circuit");
+        } else if (oddDegreeCount == 2) {
+            System.out.println("Eulerian Path");
+        }
+
+        if (source == -1 || sink == -1) {
+            System.out.println("Not Eulerian");
+        }
+
+        // find eulerian path
+        List<Integer> eulerPath = getEulerianPath(graph, source, sink);
+
+        System.out.println(eulerPath);
+    }
+
+    private static List<Integer> getEulerianPath(int[][] graph, int source, int sink) {
+        List<Integer> eulerPath = new ArrayList<>();
+        Stack<Integer> stack = new Stack<>();
+        stack.push(source);
+
+        while (!stack.isEmpty()) {
+            int node = stack.peek();
+            if (graph[node][sink] != 0) {
+                stack.push(sink);
+            } else {
+                eulerPath.add(node);
+                stack.pop();
+            }
+            
+            
+        }
+        return eulerPath;
+    }
+
+    // TODO: Implement Hierholzer's algorithm for finding Eulerian Path or Circuit
 }
