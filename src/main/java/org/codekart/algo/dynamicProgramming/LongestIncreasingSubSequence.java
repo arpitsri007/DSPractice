@@ -1,6 +1,10 @@
 package org.codekart.algo.dynamicProgramming;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class LongestIncreasingSubSequence {
 
@@ -84,7 +88,8 @@ public class LongestIncreasingSubSequence {
         int numOfPiles = 0;
 
         for (int i = 0; i < n; i++) {
-            // find just greater element in sorted array if found replace it else add it to the sorted array
+            // find just greater element in sorted array if found replace it else add it to
+            // the sorted array
             int pileIndex = findPileToReplace(piles, numOfPiles, arr[i]);
 
             piles[pileIndex] = arr[i];
@@ -96,7 +101,7 @@ public class LongestIncreasingSubSequence {
         return numOfPiles;
     }
 
-    //Binary Search to find the first pile with top card >= target
+    // Binary Search to find the first pile with top card >= target
     protected static int findPileToReplace(int[] piles, int numOfPiles, int target) {
         int left = 0, right = numOfPiles - 1;
         int result = numOfPiles; // default result is the last pile
@@ -293,8 +298,115 @@ public class LongestIncreasingSubSequence {
         return 0;
     }
 
-
     // Largest Divisible Subset
-    // Problem Statement: Given an array of integers, find the largest subset such that every pair (i, j) in the subset satisfies i % j == 0 or j % i == 0.
+    // Problem Statement: Given an array of integers, find the largest subset such
+    // that every pair (i, j) in the subset satisfies i % j == 0 or j % i == 0.
+
+    // recursive approach
+
+    public static List<Integer> largestDivisibleSubset(int[] nums) {
+        Arrays.sort(nums);
+        List<Integer> result = new ArrayList<>();
+        List<Integer> currElement = new ArrayList<>();
+        int prev = -1;
+
+        return largestDivisibleSubset(nums, 0, prev, result, currElement);
+    }
+
+    protected static List<Integer> largestDivisibleSubset(int[] nums, int index, int prev, List<Integer> result,
+            List<Integer> currElement) {
+        if (index >= nums.length) {
+            if (currElement.size() > result.size()) {
+                result = new ArrayList<>(currElement);
+            }
+            return result;
+        }
+
+        // Take option
+        if (prev == -1 || nums[index] % prev == 0 || prev % nums[index] == 0) {
+            currElement.add(nums[index]);
+            result = largestDivisibleSubset(nums, index + 1, nums[index], result, currElement);
+            currElement.remove(currElement.size() - 1);
+        }
+
+        // Not Take option
+        return largestDivisibleSubset(nums, index + 1, prev, result, currElement);
+    }
+
+    protected static List<Integer> largestDivisibleSubsetTopDownMemo(int[] nums) {
+        Arrays.sort(nums);
+        Map<String, List<Integer>> memo = new HashMap<>();
+        return largestDivisibleSubsetTopDownMemo(nums, 0, -1, memo);
+    }
+
+    protected static List<Integer> largestDivisibleSubsetTopDownMemo(int[] nums, int index, int prevIndex,
+            Map<String, List<Integer>> memo) {
+        if (index >= nums.length) {
+            return new ArrayList<>();
+        }
+
+        String key = index + "-" + prevIndex;
+
+        if (memo.containsKey(key)) {
+            return new ArrayList<>(memo.get(key));
+        }
+
+        List<Integer> skipCurrent = largestDivisibleSubsetTopDownMemo(nums, index + 1, prevIndex, memo);
+        List<Integer> takeCurrent = new ArrayList<>();
+
+        int prev = prevIndex == -1 ? Integer.MIN_VALUE : nums[prevIndex];
+
+        if (prevIndex == -1 || nums[index] % prev == 0 || prev % nums[index] == 0) {
+            List<Integer> nextElements = largestDivisibleSubsetTopDownMemo(nums, index + 1, index, memo);
+            takeCurrent = new ArrayList<>(nextElements);
+            takeCurrent.add(0, nums[index]);
+        }
+
+        List<Integer> result = takeCurrent.size() > skipCurrent.size() ? takeCurrent : skipCurrent;
+
+        memo.put(key, new ArrayList<>(result));
+        return result;
+    }
+
+    // bottom up approach
+
+    public static List<Integer> largestDivisibleSubsetBottomUp(int[] nums) {
+        Arrays.sort(nums);
+        int n = nums.length;
+        int[] dp = new int[n];
+        int[] prev = new int[n];
+        int maxLength = 1;
+        int maxIndex = 0;
+
+        for (int i = 0; i < n; i++) {
+            dp[i] = 1;
+            prev[i] = -1;
+        }
+
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (nums[i] % nums[j] == 0) {
+                    if (dp[j] + 1 > dp[i]) {
+                        dp[i] = dp[j] + 1;
+                        prev[i] = j;
+                    }
+                   // maxLength and maxIndex
+                   if(dp[i] > maxLength) {
+                    maxLength = dp[i];
+                    maxIndex = i;
+                   }
+                }
+            }
+        }
+
+        List<Integer> result = new ArrayList<>();
+
+        while (maxIndex != -1) {
+            result.add(nums[maxIndex]);
+            maxIndex = prev[maxIndex];
+        }
+
+        return result;
+    }
 
 }
