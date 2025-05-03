@@ -53,14 +53,63 @@ public class LongestIncreasingSubSequence {
             dp[i] = 1;
         }
 
+        int maxLength = 0;
+
         for (int i = 1; i < n; i++) {
             for (int j = 0; j < i; j++) {
                 if (arr[i] > arr[j]) {
                     dp[i] = Math.max(dp[i], dp[j] + 1);
+                    maxLength = Math.max(maxLength, dp[i]);
                 }
             }
         }
-        return dp[n - 1];
+        return maxLength;
+    }
+
+    // Patience Sorting
+    // - this is a sorting algorithm that is used to find the longest increasing
+    // subsequence
+    // - it is a greedy algorithm that is used to find the longest increasing
+    // subsequence
+
+    public static int patienceSorting(int[] arr) {
+        int n = arr.length;
+
+        if (n == 0) {
+            return 0;
+        }
+
+        int[] piles = new int[n];
+
+        int numOfPiles = 0;
+
+        for (int i = 0; i < n; i++) {
+            // find just greater element in sorted array if found replace it else add it to the sorted array
+            int pileIndex = findPileToReplace(piles, numOfPiles, arr[i]);
+
+            piles[pileIndex] = arr[i];
+
+            if (pileIndex == numOfPiles) {
+                numOfPiles++;
+            }
+        }
+        return numOfPiles;
+    }
+
+    //Binary Search to find the first pile with top card >= target
+    protected static int findPileToReplace(int[] piles, int numOfPiles, int target) {
+        int left = 0, right = numOfPiles - 1;
+        int result = numOfPiles; // default result is the last pile
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (piles[mid] >= target) {
+                result = mid;
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return result;
     }
 
     // maximum length of pair chain
@@ -123,7 +172,7 @@ public class LongestIncreasingSubSequence {
         int n = words.length;
         Arrays.sort(words, (a, b) -> a.length() - b.length());
         int[][] dp = new int[n][n];
-        for (int i = 0; i < n ; i++) {
+        for (int i = 0; i < n; i++) {
             Arrays.fill(dp[i], -1);
         }
         return longestStringChain(words, 0, -1, dp);
@@ -152,7 +201,7 @@ public class LongestIncreasingSubSequence {
         }
 
         return dp[index][prev] = Math.max(take, notTake);
-        
+
     }
 
     protected static boolean isPredecessor(String previousWord, String currentWord) {
@@ -181,7 +230,7 @@ public class LongestIncreasingSubSequence {
         }
 
         for (int i = 1; i < n; i++) {
-            for (int j = i-1; j >= 0; j--) {
+            for (int j = i - 1; j >= 0; j--) {
                 if (isPredecessor(words[j], words[i])) {
                     dp[i] = Math.max(dp[i], dp[j] + 1);
                 }
@@ -198,10 +247,10 @@ public class LongestIncreasingSubSequence {
     public static int numberOfArrays(int n, int m, int k) {
         // recursion approach
         // numOfArraysHelper(int idx, int searchCost, int maxSoFar, dp)
-        long[][][] dp = new long[n][k+1][m+1];
+        long[][][] dp = new long[n][k + 1][m + 1];
         for (int i = 0; i < n; i++) {
             for (int j = 0; j <= k; j++) {
-                for(int l = 0; l <= m; l++) {
+                for (int l = 0; l <= m; l++) {
                     dp[i][j][l] = -1;
                 }
             }
@@ -212,36 +261,40 @@ public class LongestIncreasingSubSequence {
     protected static int numOfArraysHelper(int idx, int searchCost, int maxSoFar, int n, int m, int k, long[][][] dp) {
         int MOD = 1000000007;
         if (idx == n) {
-            if(searchCost == k) {
+            if (searchCost == k) {
                 return 1;
             }
             return 0;
         }
 
-        if(searchCost > k || searchCost + (n-idx) < k) {
+        if (searchCost > k || searchCost + (n - idx) < k) {
             return 0;
         }
 
-        if(dp[idx][searchCost][maxSoFar] != -1) {
-            return (int)dp[idx][searchCost][maxSoFar];
+        if (dp[idx][searchCost][maxSoFar] != -1) {
+            return (int) dp[idx][searchCost][maxSoFar];
         }
 
         long result = 0;
-        for(int i = 1; i <= m; i++) {
-            if(i > maxSoFar) {
-                result += numOfArraysHelper(idx+1, searchCost+1, i, n, m, k, dp) % MOD;
+        for (int i = 1; i <= m; i++) {
+            if (i > maxSoFar) {
+                result += numOfArraysHelper(idx + 1, searchCost + 1, i, n, m, k, dp) % MOD;
             } else {
-                result += numOfArraysHelper(idx+1, searchCost, maxSoFar, n, m, k, dp) % MOD;
+                result += numOfArraysHelper(idx + 1, searchCost, maxSoFar, n, m, k, dp) % MOD;
             }
         }
         dp[idx][searchCost][maxSoFar] = result % MOD;
-        return (int)dp[idx][searchCost][maxSoFar];
+        return (int) dp[idx][searchCost][maxSoFar];
     }
 
     // TODO: bottom up approach of numberOfArrays
-    
+
     public static int numberOfArraysBottomUp(int n, int m, int k) {
-       return 0;
+        return 0;
     }
+
+
+    // Largest Divisible Subset
+    // Problem Statement: Given an array of integers, find the largest subset such that every pair (i, j) in the subset satisfies i % j == 0 or j % i == 0.
 
 }
