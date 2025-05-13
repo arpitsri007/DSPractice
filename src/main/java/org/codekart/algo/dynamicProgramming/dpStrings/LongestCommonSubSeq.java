@@ -142,4 +142,16 @@ public class LongestCommonSubSeq {
         }
         System.out.println(sb.reverse().toString());
     }
+
+    public static boolean isSubsequence(String parentString, String childString) {
+        int i = 0;
+        int j = 0;
+        while(i < parentString.length() && j < childString.length()) {
+            if(parentString.charAt(i) == childString.charAt(j)) {
+                j++;
+            }
+            i++;
+        }
+        return j == childString.length();
+    }
 }

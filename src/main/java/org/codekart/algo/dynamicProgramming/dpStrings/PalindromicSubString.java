@@ -166,7 +166,6 @@ public class PalindromicSubString {
     }
 
     // palindrome partitioning
-
     public List<List<String>> partition(String s) {
         List<List<String>> result = new ArrayList<>();
         boolean[][] dp = new boolean[s.length()][s.length()];
@@ -206,12 +205,90 @@ public class PalindromicSubString {
         return;
     }
 
-    // palindrome partitioning II
     // Problem: Given a string s, partition s such that every substring of the partition is a palindrome.
+    // palindrome partitioning II using recursion and memoization
+    // TC: O(n^3) - n^2 states and n for each state
+    // SC: O(n^2) + O(n) for recursion stack
+    public int minCutRecursionHelper(String s, int start, int end, int[][] memo) {
+        if(start >= end) {
+            return 0;
+        }
+
+        if(isPalindrome(s, start, end)) { // O(n)
+            return memo[start][end] = 0;
+        }
+
+        if(memo[start][end] != -1) {
+            return memo[start][end];
+        }
+
+        int minCuts = Integer.MAX_VALUE;
+        for(int k = start; k <= end -1 ; k++) { // O(n)
+            int left = minCutRecursionHelper(s, start, k, memo);
+            int right = minCutRecursionHelper(s, k+1, end, memo);
+            minCuts = Math.min(minCuts, left + right + 1);
+        }
+
+        memo[start][end] = minCuts;
+        return minCuts;
+        
+    }
+
+    public static boolean isPalindrome(String s, int start, int end) {
+        while(start < end) {
+            if(s.charAt(start) != s.charAt(end)) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
+    }
+
+    // palindrome partitioning II using tabulation
+
+    public int minCutTabulation(String s) {
+        int[] cuts = new int[s.length()];
+        // cuts[i] = minimum number of cuts needed for a palindrome partitioning of s[0:i]
+
+        boolean[][] dp = new boolean[s.length()][s.length()];
+        // dp[i][j] = true if s[i:j] is a palindrome else false
+        for(int i = 0; i < s.length(); i++) {
+            dp[i][i] = true;
+        }
+        for(int i = 0; i < s.length() - 1; i++) {
+            if(s.charAt(i) == s.charAt(i+1)) {
+                dp[i][i+1] = true;
+            }
+        }
+
+        for(int len = 3; len <= s.length(); len++) {
+            for(int i = 0; i+len-1 < s.length(); i++) {
+                int j = i + len - 1;
+                if(s.charAt(i) == s.charAt(j) && dp[i+1][j-1]) {
+                    dp[i][j] = true;
+                }
+            }
+        }
 
 
+        for(int i = 0; i < s.length(); i++) {
+            cuts[i] = Integer.MAX_VALUE;
+        }
 
-
-
+        for(int i = 0; i < s.length(); i++) {
+            if(dp[0][i]) {
+                cuts[i] = 0;
+            } else {
+                for(int j = 0; j < i; j++) {
+                    if(dp[j+1][i] && cuts[i] > cuts[j] + 1) {
+                        cuts[i] = cuts[j] + 1;
+                    }
+                }
+            }
+        }
+        return cuts[s.length()-1];
+        
+    }
 
 }
