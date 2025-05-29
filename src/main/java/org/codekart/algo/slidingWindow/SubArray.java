@@ -1,14 +1,10 @@
 package org.codekart.algo.slidingWindow;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 public class SubArray {
-    public static void main(String[] args) {
-        int[] arr = { 1, 3, 5, 2, 7, 5 };
-        int minK = 1;
-        int maxK = 5;
-        int result = countSubarrays(arr, minK, maxK);
-        System.out.println(result);
-   
-    }
 
     // leetcode 2444: Count Subarrays With Fixed Bounds
     // brute force:
@@ -47,26 +43,26 @@ public class SubArray {
         int culpritIndex = -1;
         int result = 0;
         for (int i = 0; i < nums.length; i++) {
-            if(nums[i] < minK || nums[i] > maxK){
+            if (nums[i] < minK || nums[i] > maxK) {
                 culpritIndex = i;
             }
-            if(nums[i] == minK){
+            if (nums[i] == minK) {
                 minkPosition = i;
             }
-            if(nums[i] == maxK){
+            if (nums[i] == maxK) {
                 maxkPosition = i;
             }
 
             int left = Math.min(minkPosition, maxkPosition);
             long temp = left - culpritIndex;
-            if(temp > 0) {
+            if (temp > 0) {
                 result += temp;
             }
-        
+
         }
 
         return result;
-      
+
     }
 
     // K radius subarray avg brute force
@@ -74,7 +70,7 @@ public class SubArray {
         int n = nums.length;
         int[] result = new int[n];
         for (int i = 0; i < n; i++) {
-            if(i - k < 0 || i + k >= n){
+            if (i - k < 0 || i + k >= n) {
                 result[i] = -1;
                 continue;
             }
@@ -88,8 +84,247 @@ public class SubArray {
     }
 
     // K radius subarray avg sliding window
+    public static int[] getAveragesSW(int[] nums, int k) {
+        int n = nums.length;
 
+        if (k == 0) {
+            return nums;
+        }
+
+        int[] result = new int[n];
+        Arrays.fill(result, -1);
+        int windowSize = 2 * k + 1;
+        int windowSum = 0;
+        if (windowSize > n) {
+            return result;
+        }
+        int left = 0;
+        int right = 2 * k;
+        int i = k;
+
+        for (int j = 0; j <= right; j++) {
+            windowSum += nums[j];
+        }
+        result[k] = windowSum / windowSize;
+
+        right++;
+        i++;
+
+        while (right < n) {
+            int outgoing = nums[left];
+            int incoming = nums[right];
+            windowSum = windowSum - outgoing + incoming;
+            right++;
+            left++;
+            result[i] = windowSum / windowSize;
+            i++;
+
+        }
+        return result;
+    }
+
+    // Longest subarray of 1's after deleting one element brute force
+    public static int longestSubarray(int[] nums) {
+        int n = nums.length;
+        int result = 0;
+        int zeroCount = 0;
+        for (int i = 0; i < n; i++) {
+            if (nums[i] == 0) {
+                zeroCount++;
+                result = Math.max(result, findMaxSubArrayOf1(nums, i));
+            }
+
+        }
+        return zeroCount == 0 ? n - 1 : result;
+    }
+
+    private static int findMaxSubArrayOf1(int[] nums, int skipIndex) {
+        int maxLength = 0;
+        int currentLength = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (i == skipIndex) {
+                continue;
+            }
+            if (nums[i] == 1) {
+                currentLength++;
+            } else {
+                currentLength = 0;
+            }
+            maxLength = Math.max(maxLength, currentLength);
+        }
+        return maxLength;
+    }
+
+    // Longest subarray of 1's after deleting one element sliding window
+    public static int longestSubarraySW(int[] nums) {
+        int n = nums.length;
+        int result = 0;
+        int zeroCount = 0;
+        int left = 0;
+        int right = 0;
+
+        while (right < n) {
+            if (nums[right] == 0) {
+                zeroCount++;
+            }
+            while (zeroCount > 1) {
+                if (nums[left] == 0) {
+                    zeroCount--;
+                }
+                left++;
+            }
+            result = Math.max(result, right - left);
+            right++;
+        }
+        return result == n ? n - 1 : result;
+    }
+
+    // Longest subarray of 1's after deleting one element sliding window better
+    // sliding window
+    public static int longestSubarraySWBetter(int[] nums) {
+        int n = nums.length;
+        int result = 0;
+        int lastZeroIndex = -1;
+        int left = 0;
+
+        for (int right = 0; right < n; right++) {
+            if (nums[right] == 0) {
+                left = lastZeroIndex + 1;
+                lastZeroIndex = right;
+            }
+
+            result = Math.max(result, right - left);
+        }
+        return result;
+    }
+
+    // brute force - leetcode 930
+    public int numSubarraysWithSum(int[] nums, int goal) {
+        int count = 0;
+        int n = nums.length;
+
+        for (int i = 0; i < n; i++) {
+            int currsum = nums[i];
+            for (int j = i; j < n; j++) {
+                if (i != j)
+                    currsum += nums[j];
+                if (currsum == goal) {
+                    count++;
+                }
+            }
+        }
+
+        return count;
+    }
+
+    // using map- leetcode 930
+    public int numSubarraysWithSumMap(int[] nums, int goal) {
+        int count = 0;
+        int n = nums.length;
+
+        Map<Integer, Integer> prefixSumMap = new HashMap<>();
+
+        prefixSumMap.put(0, 1);
+        int prefixSum = 0;
+        for (int i = 0; i < n; i++) {
+            prefixSum += nums[i];
+            int target = prefixSum - goal;
+            count += prefixSumMap.getOrDefault(target, 0);
+            prefixSumMap.put(prefixSum, prefixSumMap.getOrDefault(prefixSum, 0) + 1);
+        }
+
+        return count;
+    }
+
+    // 1074. Number of Submatrices That Sum to Target - brute force
+    public int numSubmatrixSumTarget(int[][] matrix, int target) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        int count = 0;
+
+        for (int startRow = 0; startRow < rows; startRow++) {
+            for (int startCol = 0; startCol < cols; startCol++) {
+                for (int endRow = startRow; endRow < rows; endRow++) {
+                    for (int endCol = startCol; endCol < cols; endCol++) {
+                        int sum = 0;
+                        for (int row = startRow; row <= endRow; row++) {
+                            for (int col = startCol; col <= endCol; col++) {
+                                sum += matrix[row][col];
+                            }
+                        }
+                        if (sum == target) {
+                            count++;
+                        }
+                    }
+                }
+            }
+        }
+        return count;
+    }
+
+    public static int numSubarraysWithSumSW(int[] nums, int goal) {
+        int n = nums.length;
+        int i = 0;
+        int j = 0;
+        int result = 0;
+        int currSum = 0;
+        int zeroCount = 0;
+
+        while (j < n) {
+            currSum += nums[j];
+
+            while (i < j && (nums[i] == 0 || currSum > goal)) {
+
+                if (nums[i] == 0) {
+                    zeroCount++;
+                } else {
+                    zeroCount = 0;
+                }
+                currSum -= nums[i];
+                i++;
+            }
+
+            if (currSum == goal) {
+                result += zeroCount + 1;
+            }
+
+            j++;
+        }
+
+        return result;
+    }
+
+    public int numSubarrayProductLessThanK(int[] nums, int k) {
+        int n = nums.length;
+
+        int i = 0;
+        int j = 0;
+        int prod = 1;
+        int count = 0;
+
+        while (j < n) {
+            prod = prod * nums[j];
+
+            while (i < j && prod >= k) {
+                prod = prod / nums[i];
+                i++;
+            }
+
+            if (prod < k) {
+                count += j - i + 1;
+            }
+
+            j++;
+        }
+
+        return count;
+    }
+
+    public static void main(String[] args) {
+        int[] arr = { 0, 0, 0, 0, 0 };
+        int goal = 0;
+        int result = numSubarraysWithSumSW(arr, goal);
+        System.out.println(result);
+    }
 
 }
-    
-
