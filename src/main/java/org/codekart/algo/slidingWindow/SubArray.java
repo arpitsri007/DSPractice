@@ -1,7 +1,9 @@
 package org.codekart.algo.slidingWindow;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SubArray {
@@ -320,11 +322,179 @@ public class SubArray {
         return count;
     }
 
+    public static int maxSubarrayLength(int[] nums, int k) {
+        int n = nums.length;
+
+        int i = 0;
+        int j = 0;
+        int result = 0;
+
+        Map<Integer, Integer> mp = new HashMap<>();
+
+        while (j < n) {
+            int updatedFreq = mp.getOrDefault(nums[j], 0) + 1;
+            mp.put(nums[j], updatedFreq);
+
+            while (i < j && mp.getOrDefault(nums[j], 0) > k) {
+                int iFreq = mp.getOrDefault(nums[i], 0) - 1;
+                mp.put(nums[i], iFreq);
+                i++;
+            }
+
+            result = Math.max(result, j - i + 1);
+
+            j++;
+        }
+
+        return result;
+    }
+
+    public static int maxSubarrayLengthApproach2(int[] nums, int k) {
+        int n = nums.length;
+
+        int i = 0;
+        int j = 0;
+        int result = 0;
+        int culprit = 0;
+
+        Map<Integer, Integer> mp = new HashMap<>();
+
+        while (j < n) {
+            int updatedFreq = mp.getOrDefault(nums[j], 0) + 1;
+            mp.put(nums[j], updatedFreq);
+
+            if (updatedFreq == k + 1) {
+                culprit++;
+            }
+
+            if (culprit > 0) {
+                int iFreq = mp.getOrDefault(nums[i], 0) - 1;
+                mp.put(nums[i], iFreq);
+                if (iFreq == k) {
+                    culprit--;
+                }
+                i++;
+            }
+
+            if (culprit == 0) {
+                result = Math.max(result, j - i + 1);
+            }
+
+            j++;
+        }
+
+        return result;
+    }
+
+    // leetcode 2962
+    public static long countSubarrays(int[] nums, int k) {
+        int n = nums.length;
+        long result = 0;
+
+        int maxElem = Integer.MIN_VALUE;
+
+        for (int i = 0; i < n; i++) {
+            maxElem = Math.max(maxElem, nums[i]);
+        }
+
+        int i = 0;
+        int maxfreq = 0;
+        int j = 0;
+
+        while (j < n) {
+
+            if (nums[j] == maxElem) {
+                maxfreq++;
+            }
+
+            while (i <= j && maxfreq >= k) {
+                result += n - j;
+                if (nums[i] == maxElem) {
+                    maxfreq--;
+                }
+                i++;
+            }
+            j++;
+        }
+        return result;
+    }
+
+    public static long countSubarraysApproach2(int[] nums, int k) {
+        int n = nums.length;
+        long result = 0;
+
+        int maxElem = Integer.MIN_VALUE;
+
+        for (int i = 0; i < n; i++) {
+            maxElem = Math.max(maxElem, nums[i]);
+        }
+
+        List<Integer> maxIndices = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            if (nums[i] == maxElem) {
+                maxIndices.add(i);
+            }
+
+            int size = maxIndices.size();
+
+            if (size > k) {
+                int last_i = maxIndices.get(size - k);
+                result += last_i + 1;
+            }
+
+        }
+
+        return result;
+    }
+
+    // leetcode 992
+    public static int subarraysWithKDistinct(int[] nums, int k) {
+        return solver(nums, k) - solver(nums, k - 1);
+    }
+
+    private static int solver(int[] nums, int k) {
+        int n = nums.length;
+        int i = 0;
+        int j = 0;
+        int count = 0;
+
+        Map<Integer, Integer> mp = new HashMap<>();
+
+        while (j < n) {
+
+            int updatedFreq = mp.getOrDefault(nums[j], 0) + 1;
+
+            mp.put(nums[j], updatedFreq);
+
+            while (mp.size() > k) {
+                mp.put(nums[i], mp.getOrDefault(nums[i], 0) - 1);
+                if (mp.getOrDefault(nums[i], 0) <= 0) {
+                    mp.remove(nums[i]);
+                }
+                i++;
+            }
+
+            count += j - i + 1;
+            j++;
+        }
+
+        return count;
+
+    }
+
     public static void main(String[] args) {
-        int[] arr = { 0, 0, 0, 0, 0 };
-        int goal = 0;
-        int result = numSubarraysWithSumSW(arr, goal);
+        int[] arr = { 28, 5, 58, 91, 24, 91, 53, 9, 48, 85, 16, 70, 91, 91, 47, 91, 61, 4, 54, 61, 49 };
+
+        int goal = 1;
+        long result = countSubarrays(arr, goal);
         System.out.println(result);
     }
 
 }
+
+/*
+ * Tips
+ * total number of subarrays = n * (n + 1) / 2
+ * total number of subarray ending at index j from index i = j - i +1;
+ */
