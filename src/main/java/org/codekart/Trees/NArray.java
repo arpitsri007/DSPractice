@@ -63,7 +63,6 @@ public class NArray {
         for(int child : map.getOrDefault(node, new ArrayList<>())) {
             dfs(map, child, informTime, time + informTime[node]);
         }
-
     }
 
     private void bfs(Map<Integer, List<Integer>> map, int headID, int[] informTime) {

@@ -88,4 +88,11 @@ public class Algo {
         return j == pattern.length();
     }
 
+    // main method
+    public static void main(String[] args) {
+        String pattern = "ababc";
+        String text = "ababcababababc";
+        System.out.println(kmp(pattern, text));
+    }
+
 }

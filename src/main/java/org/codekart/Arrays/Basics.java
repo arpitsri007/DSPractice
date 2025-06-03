@@ -127,7 +127,54 @@ public class Basics {
     
     
 
+    // leetcode 442
+    public static List<Integer> findDuplicates(int[] nums) {
+        List<Integer> result = new ArrayList<>();
+        for(int i = 0; i < nums.length; i++){
+            int index = Math.abs(nums[i]) - 1;
+            if(nums[index] < 0){
+                result.add(Math.abs(nums[i]));
+            } else {
+                nums[index] = -nums[index];
+            }
+        }
+        return result;
+    }
 
-    
-    
+    // leetcode 41
+    public static int firstMissingPositive(int[] nums) {
+        int n = nums.length;
+        boolean containsOne = false;
+        for(int i = 0; i < n; i++){
+            if(nums[i] == 1){
+                containsOne = true;
+            }
+
+            if(nums[i] <= 0 || nums[i] > n){
+                nums[i] = 1;
+            }
+        }
+
+        if(!containsOne){
+            return 1;
+        }
+
+        for(int i = 0; i < n; i++){
+            int index = Math.abs(nums[i]) - 1;
+            if(nums[index] > 0){
+                nums[index] = -nums[index];
+            }
+
+        }
+
+        for(int i = 0; i < n; i++){
+            if(nums[i] > 0){
+                return i + 1;
+            }
+        }
+
+        return n + 1;
+    }
+
+
 }

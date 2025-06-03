@@ -483,6 +483,49 @@ public class SubArray {
 
     }
 
+    // leetcode 992 - subarrays with k distinct integers with one pass
+    public static int subarraysWithKDistinctOnePass(int[] nums, int k) {
+        int n = nums.length;
+        int i = 0;
+        int j = 0;
+        int result = 0;
+        int i_big = 0;
+
+        Map<Integer, Integer> mp = new HashMap<>();
+
+        while (j < n) {
+            int updatedFreq = mp.getOrDefault(nums[j], 0) + 1;
+            mp.put(nums[j], updatedFreq);
+
+            // Invalid window - shrink the window
+            while (mp.size() > k) {
+                mp.put(nums[i], mp.getOrDefault(nums[i], 0) - 1);
+                if (mp.getOrDefault(nums[i], 0) <= 0) {
+                    mp.remove(nums[i]);
+                }
+                i++;
+                i_big = i;
+            }
+
+            // Valid window - find the smallest valid window
+
+            while (mp.get(nums[i]) > 1) {
+                mp.put(nums[i], mp.getOrDefault(nums[i], 0) - 1);
+                i++;
+        
+            }
+
+            if(mp.size() == k){
+                result +=  i - i_big + 1;
+            }
+
+            j++;
+        }
+
+        return result;
+        
+    }
+
     public static void main(String[] args) {
         int[] arr = { 28, 5, 58, 91, 24, 91, 53, 9, 48, 85, 16, 70, 91, 91, 47, 91, 61, 4, 54, 61, 49 };
 
