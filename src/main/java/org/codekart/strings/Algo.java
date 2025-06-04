@@ -19,7 +19,7 @@ public class Algo {
                 i++;
                 j++;
             } else {
-                i = i - j + 1;
+                i = i - j + 1; // i has to start from the next character of the last i position 
                 j = 0;
             }
         }
@@ -35,9 +35,29 @@ public class Algo {
     // LPS array is used to store the index of the next character to compare in the
     // pattern
 
+    // Example of LPS array
+    // txt = "ABABABD"
+    // pat = "ABABD"
+    // lps = [0, 0, 1, 2, 0]
+    // lps[0] = 0 because there is no prefix which is also suffix in the pattern[0..0]
+    // lps[1] = 0 because there is no prefix which is also suffix in the pattern[0..1]
+    // lps[2] = 1 because "A" is a prefix which is also suffix in the pattern[0..2]
+    // lps[3] = 2 because "AB" is a prefix which is also suffix in the pattern[0..3]
+    // lps[4] = 0 because there is no prefix which is also suffix in the pattern[0..4]
+
+    // Basically prevent moving i backwards and j to 0,
+    // instead move j to next position after the longest prefix which is also suffix
+
+    // AS soon as we find a mismatch, we don't move i backwards, 
+    // we see string from 0 to j-1 and find the longest prefix which is also suffix
+    // now jump j to after that position and continue matching
+    // This holds true because since we have reached till j-1 and found a mismatch
+    // so if we just start comparing after the position of the longest prefix which is also suffix
+    // bcs before that position, we have already matched the string
+
     public static int[] computeLPSArray(String pattern) {
         int[] lps = new int[pattern.length()];
-        // lps[0] is always 0
+        // lps[0] is always 0 - because there is no prefix which is also suffix in the pattern[0..0]
         lps[0] = 0;
 
         // len holds the length of the current longest prefix suffix
@@ -94,5 +114,11 @@ public class Algo {
         String text = "ababcababababc";
         System.out.println(kmp(pattern, text));
     }
+
+    // Example of KMP algorithm
+    // pattern = "aaacaaaa"
+    // text = "aaacaaaaacaaaa"
+    // lps = [0, 1, 2, 0, 1, 2, 3, 3]
+
 
 }
