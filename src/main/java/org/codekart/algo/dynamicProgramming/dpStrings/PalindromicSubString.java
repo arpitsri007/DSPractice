@@ -165,7 +165,7 @@ public class PalindromicSubString {
        return result;
     }
 
-    // palindrome partitioning
+    // palindrome partitioning - leetcode 131
     public List<List<String>> partition(String s) {
         List<List<String>> result = new ArrayList<>();
         boolean[][] dp = new boolean[s.length()][s.length()];
