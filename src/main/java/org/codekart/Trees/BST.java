@@ -1,6 +1,10 @@
 package org.codekart.trees;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
 public class BST {
@@ -352,4 +356,145 @@ public class BST {
         return root;
     }
 
+    // leetcode 501 - find the mode of a BST - In two passes of Map
+    private static class Mode {
+
+        public int[] findMode(TreeNode root) {
+            Map<Integer, Integer> map = new HashMap<>();
+            inorder(root, map);
+            int maxCount = 0;
+            for (int count : map.values()) {
+                maxCount = Math.max(maxCount, count);
+            }
+            List<Integer> modes = new ArrayList<>();
+            for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+                if (entry.getValue() == maxCount) {
+                    modes.add(entry.getKey());
+                }
+            }
+            return modes.stream().mapToInt(i -> i).toArray();
+        }
+
+        private static void inorder(TreeNode root, Map<Integer, Integer> map) {
+            // inorder traversal of BST gives us a sorted array
+            // so we can use it to find the mode
+            if (root == null) {
+                return;
+            }
+            inorder(root.left, map);
+            map.put(root.val, map.getOrDefault(root.val, 0) + 1);
+            inorder(root.right, map);
+        }
+
+        // leetcode 501 - find the mode of a BST - In one pass of Map
+        public int[] findModeInOnePass(TreeNode root) {
+            Map<Integer, Integer> map = new HashMap<>();
+            inorder(root, map);
+            int maxCount = 0;
+            List<Integer> modes = new ArrayList<>();
+            for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+                int key = entry.getKey();
+                int value = entry.getValue();
+                if (value > maxCount) {
+                    maxCount = value;
+                    modes.clear();
+                    modes.add(key);
+                } else if (value == maxCount) {
+                    modes.add(key);
+                }
+            }
+            return modes.stream().mapToInt(i -> i).toArray();
+        }
+
+        private static int maxFreq;
+        private static int currentFreq;
+        private static Integer currentNum;
+        private static Integer prevNum;
+        private static List<Integer> modes;
+
+        public int[] findModeInOnePassInO1Space(TreeNode root) {
+            maxFreq = 0;
+            currentFreq = 0;
+            prevNum = null;
+            modes = new ArrayList<>();
+            inorderMode(root);
+            return modes.stream().mapToInt(i -> i).toArray();
+        }
+
+        private static void inorderMode(TreeNode root) {
+            if (root == null) {
+                return;
+            }
+            inorderMode(root.left);
+            currentNum = root.val;
+            if (prevNum != null && root.val == prevNum) {
+                currentFreq++;
+            } else {
+                currentFreq = 1;
+            }
+            if (currentFreq > maxFreq) {
+                maxFreq = currentFreq;
+                modes.clear();
+                modes.add(root.val);
+            } else if (currentFreq == maxFreq) {
+                modes.add(root.val);
+            }
+            prevNum = currentNum;
+            inorderMode(root.right);
+        }
+
+    }
+
+    // leetcode 1038 - Binary Search Tree to Greater Sum Tree
+    public TreeNode bstToGst(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+
+        int[] sum = new int[1];
+        sum[0] = 0;
+        bstToGst(root, sum);
+        return root;
+    }
+
+    private static void bstToGst(TreeNode root, int[] sum) {
+        // reverse inorder traversal
+        if (root == null) {
+            return;
+        }
+        bstToGst(root.right, sum);
+        sum[0] += root.val;
+        root.val = sum[0];
+        bstToGst(root.left, sum);
+    }
+
+    // leetcode 1382 - Balance a Binary Search Tree
+    public TreeNode balanceBST(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+        List<Integer> values = new ArrayList<>();
+        inorder(root, values);
+        return buildBalancedBST(values, 0, values.size() - 1);
+    }
+
+    private static void inorder(TreeNode root, List<Integer> values) {
+        if (root == null) {
+            return;
+        }
+        inorder(root.left, values);
+        values.add(root.val);
+        inorder(root.right, values);
+    }
+
+    private static TreeNode buildBalancedBST(List<Integer> values, int left, int right) {
+        if (left > right) {
+            return null;
+        }
+        int mid = left + (right - left) / 2;
+        TreeNode root = new TreeNode(values.get(mid));
+        root.left = buildBalancedBST(values, left, mid - 1);
+        root.right = buildBalancedBST(values, mid + 1, right);
+        return root;
+    }
 }
