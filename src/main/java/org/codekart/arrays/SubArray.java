@@ -35,7 +35,8 @@ public class SubArray {
     }
 
     // leetcode 525 - using prefix sum
-    public static int findMaxLengthSW(int[] nums) {
+    // similar to leetcode 560
+    public static int findMaxLengthPrefixSum(int[] nums) {
         int n = nums.length;
         int maxLength = 0;
         Map<Integer, Integer> map = new HashMap<>();
@@ -45,13 +46,18 @@ public class SubArray {
         for (int i = 0; i < n; i++) {
             currentSum += nums[i] == 0 ? -1 : 1;
 
-            if (map.containsKey(currentSum)) {
+            if (map.containsKey(currentSum)) { // sum is repeated it means some part of array has sum 0
+                // i - map.get(currentSum) is the length of the subarray with sum 0
+                // Example: [1,0,1,0,1]
+                // currentSum = 0 at index 1
+                // i = 3
+                // map.get(currentSum) = 1
+                // i - map.get(currentSum) = 3 - 1 = 2
+                // maxLength = 2
                 maxLength = Math.max(maxLength, i - map.get(currentSum));
             } else {
                 map.put(currentSum, i);
-
             }
-
         }
         return maxLength;
     }
@@ -100,7 +106,7 @@ public class SubArray {
 
             int len = j - i + 1;
 
-            count += (long)((len * (long)(len + 1)) / 2);
+            count += (long) ((len * (long) (len + 1)) / 2);
 
             i = j;
 
