@@ -18,6 +18,7 @@ class Trie {
             current = current.children[c - 'a'];
         }
         current.isWordCompleted = true;
+        current.word = word;
     }
 
 
