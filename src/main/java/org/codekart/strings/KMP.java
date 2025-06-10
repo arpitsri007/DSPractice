@@ -1,6 +1,9 @@
 package org.codekart.strings;
 
-public class Algo {
+import java.util.ArrayList;
+import java.util.List;
+
+public class KMP {
     // String pattern matching
     // KMP algorithm
     // Boyer-Moore algorithm
@@ -119,6 +122,7 @@ public class Algo {
     // pattern = "aaacaaaa"
     // text = "aaacaaaaacaaaa"
     // lps = [0, 1, 2, 0, 1, 2, 3, 3]
+
 
 
 }
