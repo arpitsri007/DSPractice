@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-public class SlidingWindow {
+public class Anagram {
 
     // driver code for sliding window
     public static void main(String[] args) {
@@ -96,25 +96,7 @@ public class SlidingWindow {
         return count;
     }
 
-    // Minimum Size Subarray Sum
-    public static int minSubArrayLen(int target, int[] nums) {
-        int i = 0;
-        int j = 0;
-        int sum = 0;
-        int minLength = Integer.MAX_VALUE;
-        int n = nums.length;
 
-        while (j < n) {
-            sum += nums[j];
-            while (sum >= target) {
-                minLength = Math.min(minLength, j - i + 1);
-                sum -= nums[i];
-                i++;
-            }
-            j++;
-        }
-        return minLength == Integer.MAX_VALUE ? 0 : minLength;
-    } // Time Complexity: O(n)
 
     // First negative integer in every window of size k
     public static int[] firstNegativeInteger(int[] nums, int k) {

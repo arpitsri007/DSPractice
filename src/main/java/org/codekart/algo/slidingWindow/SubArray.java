@@ -2,9 +2,13 @@ package org.codekart.algo.slidingWindow;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class SubArray {
 
@@ -38,7 +42,6 @@ public class SubArray {
     }
 
     // sliding window:
-
     public static int countSubarraysSW(int[] nums, int minK, int maxK) {
         int maxkPosition = -1;
         int minkPosition = -1;
@@ -448,6 +451,27 @@ public class SubArray {
         return result;
     }
 
+    // leetcode 209 - Minimum Size Subarray Sum
+    // Time Complexity: O(n)
+    public static int minSubArrayLen(int target, int[] nums) {
+        int i = 0;
+        int j = 0;
+        int sum = 0;
+        int minLength = Integer.MAX_VALUE;
+        int n = nums.length;
+
+        while (j < n) {
+            sum += nums[j];
+            while (sum >= target) {
+                minLength = Math.min(minLength, j - i + 1);
+                sum -= nums[i];
+                i++;
+            }
+            j++;
+        }
+        return minLength == Integer.MAX_VALUE ? 0 : minLength;
+    }
+
     // leetcode 992
     public static int subarraysWithKDistinct(int[] nums, int k) {
         return solver(nums, k) - solver(nums, k - 1);
@@ -512,28 +536,131 @@ public class SubArray {
             while (mp.get(nums[i]) > 1) {
                 mp.put(nums[i], mp.getOrDefault(nums[i], 0) - 1);
                 i++;
-        
+
             }
 
-            if(mp.size() == k){
-                result +=  i - i_big + 1;
+            if (mp.size() == k) {
+                result += i - i_big + 1;
             }
 
             j++;
         }
 
         return result;
-        
+
+    }
+
+    // leetcode 862 - Shortest Subarray with Sum at Least K
+    // Time Complexity: O(n)
+    // this problem is similar to the problem of minimum subArray len with target
+    // sum with a twist it has negative numbers
+    public static int shortestSubarray(int[] nums, int k) {
+        int n = nums.length;
+        Deque<Integer> dq = new LinkedList<>(); // stores index in monotonic increasing order of cumulative sum
+        long[] cumulativeSum = new long[n + 1];
+
+        int result = Integer.MAX_VALUE;
+        int j = 0;
+        while (j < n) {
+            if (j == 0) {
+                cumulativeSum[j] = nums[j];
+            } else {
+                cumulativeSum[j] = cumulativeSum[j - 1] + nums[j];
+            }
+
+            if (cumulativeSum[j] >= k) {
+                result = Math.min(result, j + 1);
+            }
+
+            // check if need to shrink the window
+            while (!dq.isEmpty() && cumulativeSum[j] - cumulativeSum[dq.peekFirst()] >= k) {
+                result = Math.min(result, j - dq.peekFirst());
+                dq.pollFirst();
+            }
+
+            while (!dq.isEmpty() && cumulativeSum[j] <= cumulativeSum[dq.peekFirst()]) {
+                dq.pollFirst();
+            }
+
+            dq.addLast(j);
+
+            j++;
+        }
+
+        return result == Integer.MAX_VALUE ? -1 : result;
+    }
+
+    // leetcode 2461 - maximum sum of distinct subarrays with length at least k
+    // brute force:
+    // 1. generate all subarrays
+    // 2. check if the subarray is valid
+    // 3. return the maximum sum of valid subarrays
+    // time complexity: O(n^2)
+    // space complexity: O(1)
+    public static int maxSumOfSubarray(int[] nums, int k) {
+        int n = nums.length;
+        int result = Integer.MIN_VALUE;
+
+        for (int i = 0; i + k - 1 < n; i++) {
+            int j = i + k - 1;
+            int sum = 0;
+            Set<Integer> set = new HashSet<>();
+            for (int l = i; l <= j; l++) {
+                if (set.contains(nums[l])) {
+                    sum = 0;
+                    break;
+                }
+                set.add(nums[l]);
+                sum += nums[l];
+            }
+            result = Math.max(result, sum);
+        }
+
+        return result;
+    }
+
+    // leetcode 2461 - maximum sum of distinct subarrays with length at least k -
+    // using sliding window
+    public static long maxSumOfSubarraySW(int[] nums, int k) {
+        int n = nums.length;
+        long result = 0;
+
+        int i = 0;
+        int j = 0;
+        long sum = 0;
+
+        Set<Integer> set = new HashSet<>();
+
+        while (j < n) {
+            // Invalid window - shrink the window
+            while (set.contains(nums[j])) {
+                set.remove(nums[i]);
+                sum -= nums[i];
+                i++;
+            }
+
+            // Valid window - add the current element
+            set.add(nums[j]);
+            sum += nums[j];
+
+            if (j - i + 1 == k) {
+                result = Math.max(result, sum);
+                set.remove(nums[i]);
+                sum -= nums[i];
+                i++;
+            }
+
+            j++;
+        }
+        return result;
     }
 
     public static void main(String[] args) {
-        int[] arr = { 28, 5, 58, 91, 24, 91, 53, 9, 48, 85, 16, 70, 91, 91, 47, 91, 61, 4, 54, 61, 49 };
-
-        int goal = 1;
-        long result = countSubarrays(arr, goal);
+        int[] nums = { 1, 5, 4, 2, 9, 9, 9 };
+        int k = 3;
+        long result = maxSumOfSubarraySW(nums, k);
         System.out.println(result);
     }
-
 }
 
 /*
