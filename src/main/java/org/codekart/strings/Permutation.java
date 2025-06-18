@@ -24,7 +24,8 @@ public class Permutation {
 
     // TC: O(n!)
     // SC: O(n) - for the set
-    private static void findAllPermutationsHelper(String str, StringBuilder sb, Set<Character> used, List<String> result) {
+    private static void findAllPermutationsHelper(String str, StringBuilder sb, Set<Character> used,
+            List<String> result) {
         if (sb.length() == str.length()) {
             result.add(sb.toString());
             return;
@@ -75,8 +76,90 @@ public class Permutation {
             findAllPermutationsHelper2(sb, idx + 1, result);
             swap(sb, idx, i);
         }
-        
+
     }
-    
-    
+
+    // Print all palindrome permutations of a string
+    public static List<String> printPalindromePermutations(String str) {
+        List<String> result = new ArrayList<>();
+        printPalindromePermutationsHelper(str, result);
+        return result;
+    }
+
+    private static void printPalindromePermutationsHelper(String str, List<String> result) {
+        // find all permutations of the string
+        List<String> permutations = findAllPermutations2(str);
+        for (String permutation : permutations) {
+            if (isPalindrome(permutation)) {
+                result.add(permutation);
+            }
+        }
+    }
+
+    private static boolean isPalindrome(String str) {
+        int left = 0;
+        int right = str.length() - 1;
+        while (left < right) {
+            if (str.charAt(left) != str.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+
+    // Print all palindrome permutations of a string using frequency array
+    public static List<String> printPalindromePermutations2(String str) {
+        List<String> result = new ArrayList<>();
+        char[] freq = new char[26];
+        for (char c : str.toCharArray()) {
+            freq[c - 'a']++;
+        }
+
+        int oddCount = 0;
+        for (int i = 0; i < 26; i++) {
+            if (freq[i] % 2 != 0) {
+                oddCount++;
+            }
+        }
+
+        if (oddCount > 1) {
+            return result;
+        }
+
+        int n = str.length();
+
+        StringBuilder sb = new StringBuilder();
+
+        char oddChar = ' ';
+        for (int i = 0; i < 26; i++) {
+            if (freq[i] % 2 != 0) {
+                oddChar = (char) (i + 'a');
+
+            }
+
+            for (int j = 0; j < freq[i] / 2; j++) {
+                sb.append((char) (i + 'a'));
+            }
+        }
+
+        // generate all permutations of the first half of the string
+        List<String> permutations = findAllPermutations2(sb.toString());
+
+        for (String permutation : permutations) {
+            StringBuilder temp = new StringBuilder(permutation);
+            String firstHalf = temp.toString();
+            String secondHalf = temp.reverse().toString();
+
+            if (oddChar != ' ') {
+                result.add(firstHalf + oddChar + secondHalf);
+            } else {
+                result.add(firstHalf + secondHalf);
+            }
+        }
+
+        return result;
+    }
+
 }
