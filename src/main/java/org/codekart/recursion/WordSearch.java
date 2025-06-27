@@ -26,7 +26,7 @@ public class WordSearch {
         int n = board[0].length;
 
         for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
+            for (int j = 0; j < n; j++) { // TC: O(m*n)
                 if (board[i][j] == word.charAt(0) && existHelper(board, word, i, j, 0))
                     return true;
             }
@@ -34,10 +34,22 @@ public class WordSearch {
         return false;
     }
 
+    /*
+     * Calculate the overall complexity
+     * For each of the m×n starting points, the DFS can explore up to 4×3^(k-1)
+     * paths, which simplifies to O(3^k).
+     * Therefore, the overall time complexity is:
+     * O(m×n × 3^k)
+     */
+    /*
+     * The space complexity is O(k) for the recursion stack, as the maximum depth of
+     * recursion is the length of the word we're searching for.
+     */
     private static boolean existHelper(char[][] board, String word, int i, int j, int index) {
-        if (index == word.length())
+        if (index == word.length()) // TC: O(w)
             return true;
-        if (i < 0 || i >= board.length || j < 0 || j >= board[0].length || board[i][j] != word.charAt(index))
+        if (i < 0 || i >= board.length || j < 0 || j >= board[0].length || board[i][j] != word.charAt(index)) // TC:
+                                                                                                              // O(1)
             return false;
 
         char temp = board[i][j];
@@ -47,7 +59,7 @@ public class WordSearch {
         for (int[] direction : directions) {
             int newI = i + direction[0];
             int newJ = j + direction[1];
-            if (existHelper(board, word, newI, newJ, index + 1)) {
+            if (existHelper(board, word, newI, newJ, index + 1)) { // TC: O(w)
                 found = true;
                 break;
             }

@@ -11,9 +11,8 @@ public class Leetcode {
         // System.out.println(maximiseConfusionSWOptimised(answerKey, k));
         int[] nums = new int[] { 3, 9, 6 };
         int k = 2;
-       // System.out.println(maxFrequencySlidingWindow(nums, k));
+        // System.out.println(maxFrequencySlidingWindow(nums, k));
         System.out.println(countCompleteSubstrings("gvgvvgv", 2));
-
 
     }
 
@@ -255,3 +254,5 @@ public class Leetcode {
         return res;
     }
 }
+
+

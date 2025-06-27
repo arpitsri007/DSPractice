@@ -49,4 +49,20 @@ public class Anagram {
         return new ArrayList<>(map.values());
     } // TC: O(n * k) SC: O(n)
 
+    public List<List<String>> groupAnagrams2(String[] strs) {
+        Map<String, List<String>> map = new HashMap<>();
+        for (String str : strs) {
+            char[] strChars = str.toCharArray();
+            char[] sortedChars = new char[26];
+
+            for(char c : strChars) {
+                sortedChars[c - 'a']++;
+            }
+
+            String sorted = new String(sortedChars);
+            map.computeIfAbsent(sorted, k -> new ArrayList<>()).add(str);
+        }
+        return new ArrayList<>(map.values());
+    }
+
 }

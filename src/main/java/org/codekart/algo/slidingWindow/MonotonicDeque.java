@@ -34,12 +34,12 @@ public class MonotonicDeque {
                 deque.pollFirst();
             }
 
-            // step2 : remove elements from the deque that are less than the current element
+            // step2 : remove elements from the deque that are less than the current element because those can never be the maximum in the current window
             while(!deque.isEmpty() && nums[deque.peekLast()] < nums[i]){
                 deque.pollLast();
             }
 
-            // step3 : add the current element to the deque
+            // step3 : add the current element to the deque - monotonic decreasing deque
             deque.offerLast(i);
 
             if(i >= k - 1){

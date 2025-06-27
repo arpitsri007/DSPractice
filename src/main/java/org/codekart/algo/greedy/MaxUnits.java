@@ -3,7 +3,8 @@ package org.codekart.algo.greedy;
 import java.util.Arrays;
 
 public class MaxUnits {
-    //leetcode 1710
+    //leetcode 
+    // Maximum Units on a Truck
     public static void main(String[] args) {
         int[][] boxTypes = {{1, 3}, {2, 2}, {3, 1}};
         int truckSize = 4;

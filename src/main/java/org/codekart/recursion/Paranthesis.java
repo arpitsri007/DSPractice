@@ -22,12 +22,12 @@ public class Paranthesis {
 
     // TC - O(2^2n) * O(2n) -- since length of the string is 2n
     // SC - Depth of the recursion tree is 2n, so O(2n)
-    // Space complexity is due to the recursion stack 
+    // Space complexity is due to the recursion stack
 
     private static void generateParenthesisHelper(List<String> result, StringBuilder sb, int n) {
-        //base case
-        if(sb.length() == 2*n) {
-            if(isBalancedParenthesis(sb.toString())) {
+        // base case
+        if (sb.length() == 2 * n) {
+            if (isBalancedParenthesis(sb.toString())) {
                 result.add(sb.toString());
             }
             return;
@@ -36,12 +36,12 @@ public class Paranthesis {
         // add "("
         sb.append("(");
         generateParenthesisHelper(result, sb, n);
-        sb.deleteCharAt(sb.length() - 1);  // undo the last operation
+        sb.deleteCharAt(sb.length() - 1); // undo the last operation
 
         // add ")"
         sb.append(")");
         generateParenthesisHelper(result, sb, n);
-        sb.deleteCharAt(sb.length() - 1);  // undo the last operation
+        sb.deleteCharAt(sb.length() - 1); // undo the last operation
     }
 
     // optimal solution for generating parenthesis
@@ -52,20 +52,21 @@ public class Paranthesis {
         return result;
     }
 
-    private static void generateParenthesisHelperOptimal(List<String> result, StringBuilder sb, int n, int open, int close) {
-        //base case
-        if(sb.length() == 2*n) {
+    private static void generateParenthesisHelperOptimal(List<String> result, StringBuilder sb, int n, int open,
+            int close) {
+        // base case
+        if (sb.length() == 2 * n) {
             result.add(sb.toString());
             return;
         }
         // recursive case
-        if(open < n) {  
+        if (open < n) {
             sb.append("(");
             // add "("
             generateParenthesisHelperOptimal(result, sb, n, open + 1, close);
             sb.deleteCharAt(sb.length() - 1);
         }
-        if(close < open) {
+        if (close < open) {
             sb.append(")");
             // add ")"
             generateParenthesisHelperOptimal(result, sb, n, open, close + 1);
@@ -75,14 +76,15 @@ public class Paranthesis {
 
     // TC - O(2^2n) -- since length of the string is 2n
     // SC - Depth of the recursion tree is 2n, so O(2n)
-    // Space complexity is due to the recursion stack 
-    
+    // Space complexity is due to the recursion stack
     private static boolean isBalancedParenthesis(String s) {
         Stack<Character> stack = new Stack<>();
-        for(char c : s.toCharArray()) {
-            if(c == '(') stack.push(c);
+        for (char c : s.toCharArray()) {
+            if (c == '(')
+                stack.push(c);
             else {
-                if(stack.isEmpty() || stack.peek() != '(') return false;
+                if (stack.isEmpty() || stack.peek() != '(')
+                    return false;
                 stack.pop();
             }
         }

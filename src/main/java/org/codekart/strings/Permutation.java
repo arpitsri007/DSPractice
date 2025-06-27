@@ -162,4 +162,21 @@ public class Permutation {
         return result;
     }
 
+    // leetcode 567 - Permutation in String 
+    // brute force
+    public static boolean isPermutation(String s1, String s2) {
+        List<String> permutations = findAllPermutations2(s1);
+        for (String permutation : permutations) {
+            if (s2.contains(permutation)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // leetcode 567 - Permutation in String 
+    // sliding window
+    // public static boolean isPermutation2(String s1, String s2) {
+    //     int[] freq = new int[26];
+    //     for (char c : s1.toCharArray()) {
 }
