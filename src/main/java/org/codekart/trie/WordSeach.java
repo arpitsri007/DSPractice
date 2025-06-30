@@ -25,15 +25,15 @@ public class WordSeach {
     public static List<String> findWords(char[][] board, String[] words) {
         List<String> result = new ArrayList<>();
 
-        for (String word : words) {
-            trie.insert(word);
+        for (String word : words) { // TC: O(w) - w is the number of words
+            trie.insert(word); // TC: O(L) - L is the length of the word
         }
 
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[0].length; j++) {
-                char c = board[i][j];
+        for (int i = 0; i < board.length; i++) { // TC: O(m) - m is the number of rows
+            for (int j = 0; j < board[0].length; j++) { // TC: O(n) - n is the number of columns
+                char c = board[i][j]; // TC: O(1)
 
-                if (trie.root.children[c - 'a'] != null) {
+                if (trie.root.children[c - 'a'] != null) { // TC: O(1)
                     dfs(board, trie.root, i, j, result);
                 }
             }
@@ -61,7 +61,7 @@ public class WordSeach {
         char temp = board[i][j];
         board[i][j] = '#';
 
-        for (int[] direction : directions) {
+        for (int[] direction : directions) { // TC: O(4^L) - L is the length of the word
             int newI = i + direction[0];
             int newJ = j + direction[1];
             dfs(board, node, newI, newJ, result);
@@ -70,4 +70,40 @@ public class WordSeach {
         board[i][j] = temp;
 
     }
+
+    /*
+     * Time and Space Complexity Analysis
+     * 
+     * Time Complexity:
+     * Building the Trie:
+     * 
+     * We iterate through each word in the input array
+     * For each word of average length L, we perform L insertions into the Trie
+     * Each insertion is an O(1) operation
+     * 
+     * Therefore, building the Trie takes O(W × L) time, where:
+     * 
+     * W is the number of words
+     * L is the average word length
+     * 
+     * DFS exploration:
+     * Every cell in the board contains a valid prefix
+     * We need to explore in all 4 directions at each step
+     * The maximum word length is L
+     * 
+     * For each cell, the maximum depth of DFS is L (the longest word length), and
+     * at each step, we explore up to 4 directions. This gives us a complexity of
+     * O(4^L) for each starting cell.
+     * 
+     * 
+     * Total DFS complexity: O(n×m×4^L) in the worst case, but much better in
+     * practice due to the Trie pruning.
+     * 
+     * Space Complexity:
+     * Trie construction: O(w * L)
+     * DFS recursion stack: O(L)
+     * 
+     * 
+     * 
+     */
 }

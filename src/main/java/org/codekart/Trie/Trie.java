@@ -1,6 +1,5 @@
 package org.codekart.trie;
 
-
 class Trie {
     TrieNode root;
 
@@ -8,7 +7,7 @@ class Trie {
         root = new TrieNode();
     }
 
-    public void insert(String word) {
+    public void insert(String word) { // TC: O(L) - L is the length of the word
         TrieNode current = root;
         for (int i = 0; i < word.length(); i++) {
             char c = word.charAt(i);
@@ -21,8 +20,7 @@ class Trie {
         current.word = word;
     }
 
-
-    public boolean search(TrieNode root, String key) {
+    public boolean search(TrieNode root, String key) { // TC: O(L) - L is the length of the word
         TrieNode current = root;
         for (int i = 0; i < key.length(); i++) {
             char c = key.charAt(i);
