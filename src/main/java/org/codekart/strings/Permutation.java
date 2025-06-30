@@ -128,15 +128,12 @@ public class Permutation {
             return result;
         }
 
-        int n = str.length();
-
         StringBuilder sb = new StringBuilder();
 
         char oddChar = ' ';
         for (int i = 0; i < 26; i++) {
             if (freq[i] % 2 != 0) {
                 oddChar = (char) (i + 'a');
-
             }
 
             for (int j = 0; j < freq[i] / 2; j++) {
@@ -164,7 +161,7 @@ public class Permutation {
 
     // leetcode 567 - Permutation in String 
     // brute force
-    public static boolean isPermutation(String s1, String s2) {
+    public static boolean checkInclusion(String s1, String s2) {
         List<String> permutations = findAllPermutations2(s1);
         for (String permutation : permutations) {
             if (s2.contains(permutation)) {
