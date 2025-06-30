@@ -173,6 +173,13 @@ public class LongestIncreasingSubSequence {
     }
 
     // longest string chain top down approach
+    // leetcode 1048
+    // TC: O(n^2)
+    // SC: O(n^2)
+
+    // TC without memoization: O()
+
+
     public static int longestStringChain(String[] words) {
         int n = words.length;
         Arrays.sort(words, (a, b) -> a.length() - b.length());
@@ -214,13 +221,11 @@ public class LongestIncreasingSubSequence {
             return false;
         }
         int i = 0, j = 0;
-        while (i < previousWord.length() && j < currentWord.length()) {
+        while (i < previousWord.length() && j < currentWord.length()) { // similar logic to find isSubsequence
             if (previousWord.charAt(i) == currentWord.charAt(j)) {
                 i++;
-                j++;
-            } else {
-                j++;
             }
+            j++;
         }
         return i == previousWord.length();
     }

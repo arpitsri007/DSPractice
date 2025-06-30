@@ -48,8 +48,7 @@ public class WordSearch {
     private static boolean existHelper(char[][] board, String word, int i, int j, int index) {
         if (index == word.length()) // TC: O(w)
             return true;
-        if (i < 0 || i >= board.length || j < 0 || j >= board[0].length || board[i][j] != word.charAt(index)) // TC:
-                                                                                                              // O(1)
+        if (i < 0 || i >= board.length || j < 0 || j >= board[0].length || board[i][j] != word.charAt(index)) // O(1)
             return false;
 
         char temp = board[i][j];
@@ -72,9 +71,45 @@ public class WordSearch {
 
     // 212. Word Search II -
     // Using Depth First Search -
-    // TC- O(n *m * n*m) - we have n*m cells as potential starting points
-    // DFS explore all directions - 8 directions - n*m cells
-    // SC - O(n * m) - visited array
+    /*
+     * Breaking it down step by step:
+     * 
+     * Outer loop iterations: We have n×m starting positions, where n is the number
+     * of rows and m is the number of columns.
+     * DFS exploration: From each starting position, the DFS can potentially explore
+     * the entire board.
+     * Word construction and checking: For each path in the DFS:
+     * 
+     * We append/remove characters from a StringBuilder (O(1) operation)
+     * We check if the current string is in the set (O(L) where L is the average
+     * word length)
+     * We possibly add it to the result list (O(L) for copying)
+     * 
+     * 
+     * Branching factor: At each step, we have up to 4 directions to explore.
+     * 
+     * The worst-case time complexity is O(n×m×4^L), where:
+     * 
+     * n×m is the board size
+     * 4 is the branching factor (4 directions)
+     * L is the maximum possible word length
+     * 
+     * This is because for each of the n×m starting positions, we might explore up
+     * to 4^L different paths in the board.
+     * 
+     * 
+     * Space Complexity Analysis
+     * 
+     * Visited array: O(n×m) for the boolean array
+     * Recursion stack: O(L) where L is the maximum DFS depth (limited by the
+     * longest word)
+     * StringBuilder: O(L) to store the current word being constructed
+     * Set and Result list: O(total characters in all words) for storing the
+     * dictionary and results
+     * 
+     * Therefore, the overall space complexity is O(n×m + L + total chars in words).
+     * 
+     */
 
     public List<String> findWords(char[][] board, String[] words) {
         int n = board.length;
@@ -98,9 +133,6 @@ public class WordSearch {
     private static void dfs(char[][] board, Set<String> set, boolean[][] visited, int i, int j, StringBuilder sb,
             List<String> result) {
         if (i < 0 || i >= board.length || j < 0 || j >= board[0].length || visited[i][j])
-            return;
-
-        if (visited[i][j])
             return;
 
         // try
@@ -131,7 +163,6 @@ public class WordSearch {
     // SC - O(w) - visited array
     public static List<String> findWords2(char[][] board, String[] words) {
         List<String> result = new ArrayList<>();
-
         // search each word in the board
         for (String word : words) {
             if (exist(board, word))
