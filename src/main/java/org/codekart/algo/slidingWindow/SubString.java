@@ -177,6 +177,31 @@ public class SubString {
         return true;
     }
 
+    // leetcode 340 - using brute force
+    public static int lengthOfLongestSubstringKDistinctBruteForce(String s, int k) {
+        int n = s.length();
+        int maxLen = 0;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < n; j++) {
+                String sub = s.substring(i, j + 1);
+                if (isKDistinct(sub, k)) {
+                    maxLen = Math.max(maxLen, j - i + 1);
+                }
+            }
+        }
+
+        return maxLen;
+    }
+
+    public static boolean isKDistinct(String sub, int k) {
+        Map<Character, Integer> mp = new HashMap<>();
+        for (char c : sub.toCharArray()) {
+            mp.put(c, mp.getOrDefault(c, 0) + 1);
+        }
+        return mp.size() <= k;
+    }
+
     // leetcode 340 - Given a string s and an integer k, return the length of the
     // longest substring of s that contains at most k distinct characters.
     public static int lengthOfLongestSubstringKDistinct(String s, int k) {
@@ -205,6 +230,33 @@ public class SubString {
             j++;
         }
         return maxLen;
+    }
+
+    // leetcode 3 -
+    /*
+     * Intuition:
+     * 1. We can use a sliding window to find the longest substring without
+     * repeating characters.
+     */
+    public static int lengthOfLongestSubstring(String s) {
+        int n = s.length();
+        int i = 0;
+        int j = 0;
+        int maxLen = 0;
+        Map<Character, Integer> mp = new HashMap<>();
+
+        while (j < n) {
+            char c = s.charAt(j);
+            if (mp.containsKey(c)) {
+                i = Math.max(i, mp.get(c) + 1);
+            }
+            mp.put(c, j);
+            maxLen = Math.max(maxLen, j - i + 1);
+            j++;
+        }
+
+        return maxLen;
+
     }
 
     // leetcode 2516 - take k of each character from the string either from left or
@@ -251,12 +303,12 @@ public class SubString {
             return;
         }
 
-        if(left <= right){
+        if (left <= right) {
             freq[s.charAt(left) - 'a']++;
             takeKOfEachCharacterHelper(s, k, left + 1, right, freq, minutes + 1, result);
             freq[s.charAt(left) - 'a']--;
         }
-        if(left <= right){
+        if (left <= right) {
             freq[s.charAt(right) - 'a']++;
             takeKOfEachCharacterHelper(s, k, left, right - 1, freq, minutes + 1, result);
             freq[s.charAt(right) - 'a']--;
@@ -270,11 +322,11 @@ public class SubString {
 
         int[] freq = new int[3];
 
-        for(char c : s.toCharArray()){
+        for (char c : s.toCharArray()) {
             freq[c - 'a']++;
         }
 
-        if(freq[0] < k || freq[1] < k || freq[2] < k){
+        if (freq[0] < k || freq[1] < k || freq[2] < k) {
             return -1;
         }
 
@@ -289,7 +341,7 @@ public class SubString {
             char c = s.charAt(j);
             freq[c - 'a']--;
 
-            while(i <= j && (freq[0] < k || freq[1] < k || freq[2] < k)){
+            while (i <= j && (freq[0] < k || freq[1] < k || freq[2] < k)) {
                 char c1 = s.charAt(i);
                 freq[c1 - 'a']++;
                 i++;

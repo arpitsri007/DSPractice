@@ -18,29 +18,28 @@ public class Maximise {
     // leetcode 1383 - using max heap
     public static int maxPerformance(int n, int[] speed, int[] efficiency, int k) {
         int MOD = 1000000007;
-        Pair<Integer, Integer>[] engineers = new Pair[n];
+        int[][] engineers = new int[n][2];
         for (int i = 0; i < n; i++) {
-            engineers[i] = new Pair<>(speed[i], efficiency[i]);
+            engineers[i][0] = speed[i];
+            engineers[i][1] = efficiency[i];
         }
 
-        Arrays.sort(engineers, (a, b) -> b.getSecond() - a.getSecond());
+        Arrays.sort(engineers, (a, b) -> b[1] - a[1]);
 
         // min heap to store the speed of the engineers
-
-        // max heap to store the speed of the engineers
         PriorityQueue<Integer> minHeap = new PriorityQueue<>();
         long maxPerformance = 0;
         long totalSpeed = 0;
 
-        for (Pair<Integer, Integer> engineer : engineers) {
-            minHeap.add(engineer.getFirst());
-            totalSpeed += engineer.getFirst();
+        for (int[] engineer : engineers) {
+            minHeap.add(engineer[0]);
+            totalSpeed += engineer[0];
 
             if (minHeap.size() > k) {
                 totalSpeed -= minHeap.poll();
             }
 
-            maxPerformance = Math.max(maxPerformance, totalSpeed * engineer.getSecond());
+            maxPerformance = Math.max(maxPerformance, totalSpeed * engineer[1]);
         }
 
         return (int) (maxPerformance % MOD);

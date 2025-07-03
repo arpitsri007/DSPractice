@@ -2,7 +2,13 @@ package org.codekart.algo.slidingWindow;
 
 public class CircularArray {
     // leetcode 2134 - using extra space
-    public static int minSwaps(int[] nums) {
+    /* 
+     * Intuition:
+     * 1. We can use a sliding window to find the maximum number of 1's in a window of size  totalones;
+     * 2. Maximum window size is totalones;
+     * 3. We can then subtract the maximum number of 1's from the total number of 1's to get the minimum number of swaps;
+     */
+    public static int minSwapsII(int[] nums) {
         int n = nums.length;
         int[] temp = new int[2 * n];
 
@@ -40,7 +46,7 @@ public class CircularArray {
         return totalOnes - maxOnes;
     }
 
-    //  optimise using constant space
+    // optimise using constant space
     public static int minSwapsOptimised(int[] nums) {
 
         int n = nums.length;
@@ -74,11 +80,45 @@ public class CircularArray {
 
         return totalOnes - maxOnes;
     }
+
     public static void main(String[] args) {
         int[] nums = { 0, 1, 0, 1, 1, 0, 0 };
         System.out.println(minSwaps(nums));
     }
 
-    // leetcode 3208 
+    // leetcode 1151
+    // Given a binary array data, return the minimum number of swaps required to
+    // group all 1’s present in the array together in any place in the array.
+
+    public static int minSwaps(int[] data) {
+        int n = data.length;
+        int totalOnes = 0;
+        for (int i = 0; i < n; i++) {
+            if (data[i] == 1) {
+                totalOnes++;
+            }
+        }
+
+        int i = 0;
+        int j = 0;
+        int maxOnes = 0;
+        int currentOnes = 0;
+        while (j < n) {
+            if (data[j] == 1) {
+                currentOnes++;
+            }
+
+            if (j - i + 1 == totalOnes) {
+                maxOnes = Math.max(maxOnes, currentOnes);
+                if (data[i] == 1) {
+                    currentOnes--;
+                }
+                i++;
+            }
+            j++;
+        }
+
+        return totalOnes - maxOnes;
+    }
 
 }
