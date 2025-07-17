@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 public class LongestIncreasingSubSequence {
-
     // driver code
     public static void main(String[] args) {
         int[] arr = { 10, 9, 2, 5, 3, 7, 101, 18 };
@@ -178,7 +177,6 @@ public class LongestIncreasingSubSequence {
     // SC: O(n^2)
 
     // TC without memoization: O()
-
 
     public static int longestStringChain(String[] words) {
         int n = words.length;
@@ -395,11 +393,11 @@ public class LongestIncreasingSubSequence {
                         dp[i] = dp[j] + 1;
                         prev[i] = j;
                     }
-                   // maxLength and maxIndex
-                   if(dp[i] > maxLength) {
-                    maxLength = dp[i];
-                    maxIndex = i;
-                   }
+                    // maxLength and maxIndex
+                    if (dp[i] > maxLength) {
+                        maxLength = dp[i];
+                        maxIndex = i;
+                    }
                 }
             }
         }

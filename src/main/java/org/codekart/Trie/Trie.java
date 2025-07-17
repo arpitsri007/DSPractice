@@ -31,4 +31,16 @@ class Trie {
         }
         return current.isWordCompleted;
     }
+
+    public boolean startsWith(TrieNode root, String prefix) { // TC: O(L) - L is the length of the prefix
+        TrieNode current = root;
+        for (int i = 0; i < prefix.length(); i++) {
+            char c = prefix.charAt(i);
+            if (current.children[c - 'a'] == null) {
+                return false;
+            }
+            current = current.children[c - 'a'];
+        }
+        return true;
+    }
 }

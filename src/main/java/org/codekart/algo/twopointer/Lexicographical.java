@@ -157,6 +157,50 @@ public class Lexicographical {
         return largest;
     }
 
+    // More optimized approach - Two pointer
+
+    public String smallestStringTwoPointer(String word, int numFriends) {
+        int n = word.length();
+        if (numFriends > n) {
+            return "";
+        }
+
+        if (numFriends == 1) {
+            return word;
+        }
+
+        int i = bestStartingIndex(word);
+        int maxPossibleLength = n - (numFriends - 1);
+        int availableLength = Math.min(maxPossibleLength, n - i);
+
+        return word.substring(i, i + availableLength);
+
+    }
+
+    private int bestStartingIndex(String word) {
+        int n = word.length();
+        int i = 0;
+        int j = 1;
+
+        while (j < n) {
+            int k = 0;
+
+            // skipping equal characters
+            while (j + k < n && word.charAt(i + k) == word.charAt(j + k)) {
+                k++;
+            }
+
+            if (j + k == n && word.charAt(i + k) < word.charAt(j + k)) {
+                i = j;
+                j = j + 1;
+            } else {
+                j = j + k + 1;
+            }
+
+        }
+        return i;
+    }
+
     // main method
     public static void main(String[] args) {
         Lexicographical l = new Lexicographical();
