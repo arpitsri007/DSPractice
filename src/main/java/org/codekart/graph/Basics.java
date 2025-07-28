@@ -25,7 +25,6 @@ public class Basics {
         addEdgeInDirectedGraph(graph, 2, 3);
         addEdgeInDirectedGraph(graph, 3, 4);
         addEdgeInDirectedGraph(graph, 4, 1);
-      
 
         // boolean[] visited = new boolean[5];
         // List<Integer> result = new ArrayList<>();
@@ -89,7 +88,7 @@ public class Basics {
     public static void bfs(List<List<Integer>> graph, int u, boolean[] visited, List<Integer> result) {
         Queue<Integer> queue = new LinkedList<>();
         queue.add(u);
-        visited[u] = true; 
+        visited[u] = true;
         while (!queue.isEmpty()) {
             int node = queue.poll();
             result.add(node);
@@ -108,7 +107,7 @@ public class Basics {
         visited[u] = true;
 
         while (!stack.isEmpty()) {
-            int node = stack.pop(); 
+            int node = stack.pop();
             result.add(node);
             for (int v : graph.get(node)) {
                 if (!visited[v]) {
@@ -161,22 +160,25 @@ public class Basics {
     }
 
     // revisit this again
-    public static boolean isCycleInDirectedGraphUsingDFS(List<List<Integer>> graph, int u, boolean[] visited, boolean[] recStack) {
+    public static boolean isCycleInDirectedGraphUsingDFS(List<List<Integer>> graph, int u, boolean[] visited,
+            boolean[] recStack) {
         visited[u] = true;
         recStack[u] = true;
-        for(int v : graph.get(u)) {
-            if(!visited[v]) {
-                if(isCycleInDirectedGraphUsingDFS(graph, v, visited, recStack)) {
+        for (int v : graph.get(u)) {
+            if (!visited[v]) {
+                if (isCycleInDirectedGraphUsingDFS(graph, v, visited, recStack)) {
                     return true;
                 }
-            } else if(recStack[v]) {
+            } else if (recStack[v]) {
                 return true;
             }
         }
         recStack[u] = false;
         return false;
     }
-    
+
+
+
 }
 
 // 1. Topological Sorting

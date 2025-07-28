@@ -93,8 +93,6 @@ public class DoublyLinkedList {
         dll.addAtEnd(2);
         dll.addAtEnd(3);
         dll.addAtEnd(4);
-        
-    
         dll.display();
     }
 

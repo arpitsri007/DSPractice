@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
 
-
 // Kahn's Algorithm
 public class TopologicalSort {
 
     // create indegree array
-            // Example: u --> v <--- x  :: indegree of v is 2 and indegree of x and u is 0 so correct topological sort is u, x, v or x, u, v
+    // Example: u --> v <--- x :: indegree of v is 2 and indegree of x and u is 0 so
+    // correct topological sort is u, x, v or x, u, v
     // create queue
     // add all nodes with indegree 0 to queue
     // while queue is not empty
@@ -28,7 +28,6 @@ public class TopologicalSort {
     // Topological Sort is possible only for DAG (Directed Acyclic Graph)
     // Topological Sort is not possible for graphs with cycles
     // Topological Sort is not possible for graphs with multiple components
-
 
     public static List<Integer> topologicalSort(List<List<Integer>> graph) {
         // if cycle is present, return empty list
@@ -55,9 +54,9 @@ public class TopologicalSort {
     }
 
     private static List<Integer> topologicalSortUsingDFS(List<List<Integer>> graph) {
-       // implement using stack
-       Stack<Integer> stack = new Stack<>();
-       boolean[] visited = new boolean[graph.size()];
+        // implement using stack
+        Stack<Integer> stack = new Stack<>();
+        boolean[] visited = new boolean[graph.size()];
 
         for (int i = 0; i < graph.size(); i++) {
             if (!visited[i]) {
@@ -137,11 +136,8 @@ public class TopologicalSort {
 
         List<Integer> resultUsingDFS = topologicalSortUsingDFS(graph);
         System.out.println(resultUsingDFS);
-        
 
         System.out.println("Is Cycle in Directed Graph Using BFS: " + isCycleInDirectedGraphUsingBFS(graph));
     }
-
-
 
 }

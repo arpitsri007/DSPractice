@@ -16,7 +16,7 @@ class BipartiteGraph {
         Arrays.fill(color, -1);
         for (int i = 0; i < n; i++) {
             if (color[i] == -1) {
-                if (!dfs(graph, i, color)) {
+                if (!dfs(graph, i, color, 0)) {
                     return false;
                 }
             }
@@ -24,15 +24,14 @@ class BipartiteGraph {
         return true;
     }
 
-    private static boolean dfs(int[][] graph, int node, int[] color) {
-        color[node] = 0;
+    private static boolean dfs(int[][] graph, int node, int[] color, int colorValue) {
+        color[node] = colorValue;
         for (int neighbor : graph[node]) {
             if (color[neighbor] == -1) {
-                color[neighbor] = 1 - color[node];
-                if (!dfs(graph, neighbor, color)) {
+                if (!dfs(graph, neighbor, color, 1 - colorValue)) {
                     return false;
                 }
-            } else if (color[neighbor] == color[node]) {
+            } else if (color[neighbor] == colorValue) {
                 return false;
             }
         }
@@ -46,7 +45,7 @@ class BipartiteGraph {
         Arrays.fill(color, -1);
         for (int i = 0; i < n; i++) {
             if (color[i] == -1) {
-                if (!bfs(graph, i, color)) {
+                if (!bfs(graph, i, color, 0)) {
                     return false;
                 }
             }
@@ -54,17 +53,17 @@ class BipartiteGraph {
         return true;
     }
 
-    private static boolean bfs(int[][] graph, int node, int[] color) {
-        color[node] = 0;
+    private static boolean bfs(int[][] graph, int node, int[] color, int colorValue) {
+        color[node] = colorValue;
         Queue<Integer> queue = new LinkedList<>();
         queue.add(node);
         while (!queue.isEmpty()) {
             int current = queue.poll();
             for (int neighbor : graph[current]) {
                 if (color[neighbor] == -1) {
-                    color[neighbor] = 1 - color[current];
+                    color[neighbor] = 1 - colorValue;
                     queue.add(neighbor);
-                } else if (color[neighbor] == color[current]) {
+                } else if (color[neighbor] == colorValue) {
                     return false;
                 }
             }

@@ -83,28 +83,41 @@ public class MedianFinder {
 
     // with two heaps:
     public static class MedianFinderTwoHeaps {
-        private PriorityQueue<Integer> maxHeap;
-        private PriorityQueue<Integer> minHeap;
+        private PriorityQueue<Integer> leftMaxHeap;
+        private PriorityQueue<Integer> rightMinHeap;
 
         public MedianFinderTwoHeaps() {
-            maxHeap = new PriorityQueue<>(Collections.reverseOrder());
-            minHeap = new PriorityQueue<>();
+            leftMaxHeap = new PriorityQueue<>(Collections.reverseOrder());
+            rightMinHeap = new PriorityQueue<>();
         }
 
         // TC: O(log n)
         public void addNum(int num) {
-            if (maxHeap.isEmpty() || num <= maxHeap.peek()) {
-                maxHeap.offer(num);
+            // example : [3,4,5, 8,9,10]
+            // first left half: [3,4,5]
+            // second right half: [8,9,10]
+            // Idea is that if incoming element is less than top of leftMaxHeap, then it would be part of left half
+            // if incoming element is greater than top of rightMinHeap, then it would be part of right half
+            if (leftMaxHeap.isEmpty() || num <= leftMaxHeap.peek()) {
+                leftMaxHeap.offer(num);
             } else {
-                minHeap.offer(num);
+                rightMinHeap.offer(num);
             }
 
             // balance the heaps
-            if (maxHeap.size() > minHeap.size() + 1) {
-                minHeap.offer(maxHeap.poll());
-            } else if (minHeap.size() > maxHeap.size()) {
-                maxHeap.offer(minHeap.poll());
+            // leftMaxHeap will always have equal or one more element than rightMinHeap
+            if (leftMaxHeap.size() > rightMinHeap.size() + 1) {
+                rightMinHeap.offer(leftMaxHeap.poll());
+            } else if (rightMinHeap.size() > leftMaxHeap.size()) {
+                leftMaxHeap.offer(rightMinHeap.poll());
             }
+        }
+
+        public double findMedian() {
+            if (leftMaxHeap.size() == rightMinHeap.size()) {
+                return (leftMaxHeap.peek() + rightMinHeap.peek()) / 2.0;
+            }
+            return leftMaxHeap.peek();
         }
     }
 

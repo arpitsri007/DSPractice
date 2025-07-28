@@ -22,7 +22,6 @@ public class Disjointset {
         union(parent, 8, 9);
         System.out.println(find(parent, 1));
         System.out.println(find(parent, 1));
-
     }
 
     private static int find(int[] parent, int x) {
@@ -71,7 +70,6 @@ public class Disjointset {
             size[xRoot] += size[yRoot];
         }
     }
-    
 
     private static boolean detectCycleInUndirectedGraphUsingDisjointSet(int[][] graph) {
         int[] parent = new int[graph.length];
@@ -96,7 +94,7 @@ public class Disjointset {
 
     }
 
-
+    // leetcode 990
     public static class SatisfibilityOfGivenEquations {
 
         public static void main(String[] args) {
@@ -131,11 +129,9 @@ public class Disjointset {
         }
     }
 
-
     public static class NumberOfOperationsToMakeNetworkConnected {
-
         public static void main(String[] args) {
-            int[][] connections = {{0,1},{0,2},{1,2}};
+            int[][] connections = { { 0, 1 }, { 0, 2 }, { 1, 2 } };
             System.out.println(makeConnected(4, connections));
         }
 
@@ -143,49 +139,49 @@ public class Disjointset {
             int[] parent = new int[n];
             int[] rank = new int[n];
             int components = n;
-            for(int i=0;i<n;i++) {
+            for (int i = 0; i < n; i++) {
                 parent[i] = i;
             }
-            for(int[] connection : connections) {
+            for (int[] connection : connections) {
                 int u = connection[0];
                 int v = connection[1];
                 int uRoot = findWithPathCompression(parent, u);
                 int vRoot = findWithPathCompression(parent, v);
 
-                if(uRoot != vRoot) {
+                if (uRoot != vRoot) {
                     unionWithRank(parent, rank, uRoot, vRoot);
                     components--;
                 }
             }
-            return components - 1;           
+            return components - 1;
         }
     }
 
     public static class NumberOfProvinces {
 
         public static void main(String[] args) {
-            int[][] isConnected = {{1,1,0},{1,1,0},{0,0,1}};
+            int[][] isConnected = { { 1, 1, 0 }, { 1, 1, 0 }, { 0, 0, 1 } };
             System.out.println(findCircleNum(isConnected));
         }
 
         private static int findCircleNum(int[][] isConnected) {
             int[] parent = new int[isConnected.length];
             int[] rank = new int[isConnected.length];
-            for(int i=0;i<isConnected.length;i++) {
+            for (int i = 0; i < isConnected.length; i++) {
                 parent[i] = i;
             }
 
-            for(int i=0;i<isConnected.length;i++) {
-                for(int j=0;j<isConnected[i].length;j++) {
-                    if(isConnected[i][j] == 1) {
+            for (int i = 0; i < isConnected.length; i++) {
+                for (int j = 0; j < isConnected[i].length; j++) {
+                    if (isConnected[i][j] == 1) {
                         unionWithRank(parent, rank, i, j);
                     }
                 }
             }
 
             int components = 0;
-            for(int i=0;i<isConnected.length;i++) {
-                if(parent[i] == i) {
+            for (int i = 0; i < isConnected.length; i++) {
+                if (parent[i] == i) {
                     components++;
                 }
             }
@@ -196,27 +192,32 @@ public class Disjointset {
     public static class NumberOfConnectedComponentsInAnUndirectedGraph {
 
         public static void main(String[] args) {
-            int[][] edges = {{0,1},{1,2},{3,4}};
+            int[][] edges = { { 0, 1 }, { 1, 2 }, { 3, 4 } };
             System.out.println(countComponents(5, edges));
         }
 
         private static int countComponents(int n, int[][] edges) {
             int[] parent = new int[n];
             int[] rank = new int[n];
-            for(int i=0;i<n;i++) {
+            for (int i = 0; i < n; i++) {
                 parent[i] = i;
             }
-            for(int[] edge : edges) {
+            for (int[] edge : edges) {
                 unionWithRank(parent, rank, edge[0], edge[1]);
             }
-            
+
             int components = 0;
-            for(int i=0;i<n;i++) {
-                if(parent[i] == i) {
+            for (int i = 0; i < n; i++) {
+                if (parent[i] == i) {
                     components++;
                 }
             }
             return components;
+        }
+
+        // leetcode 2316 - Count Unreachable Pairs of Nodes in an Undirected Graph
+        public long countPairs(int n, int[][] edges) {
+            return 0;
         }
     }
 }

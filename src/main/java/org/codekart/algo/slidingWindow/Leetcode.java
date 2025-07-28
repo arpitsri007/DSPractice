@@ -216,7 +216,6 @@ public class Leetcode {
         int res = 0;
 
         // int uniqueChar --> 1, 2...
-
         for (int uniqueChar = 1; uniqueChar <= 26 && uniqueChar * k <= end - start + 1; uniqueChar++) {
 
             int windowSize = uniqueChar * k;
@@ -254,5 +253,3 @@ public class Leetcode {
         return res;
     }
 }
-
-

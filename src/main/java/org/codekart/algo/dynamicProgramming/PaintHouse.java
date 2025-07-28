@@ -46,11 +46,81 @@ public class PaintHouse {
         return Math.min(dp[n - 1][0], Math.min(dp[n - 1][1], dp[n - 1][2]));
     }
 
-    // Painting the walls - recursion with memoization - leetcode 2742
+    // leetcode 265 - Paint House II
+    /*
+     * There are a row of n houses, each house can be painted with one of the k
+     * colors. The cost of painting each house with a certain color is different.
+     * You have to paint all the houses such that no two adjacent houses have the
+     * same color.
+     * 
+     * The cost of painting each house with a certain color is represented by an n x
+     * k cost matrix costs.
+     * 
+     */
+    public int minCostII(int[][] costs) {
+        int n = costs.length;
+        int k = costs[0].length;
+        int[][] dp = new int[n][k];
+        for (int i = 0; i < k; i++) {
+            dp[0][i] = costs[0][i];
+        }
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < k; j++) {
+                int min = Integer.MAX_VALUE;
+                for (int l = 0; l < k; l++) {
+                    if (l != j) {
+                        min = Math.min(min, dp[i - 1][l]);
+                    }
+                }
+                dp[i][j] = costs[i][j] + min;
+            }
+        }
+        return Arrays.stream(dp[n - 1]).min().getAsInt();
+    }
 
+    // minCostII - optimized
+    public int minCostIIOptimized(int[][] costs) {
+        int n = costs.length;
+        int k = costs[0].length;
+        int[][] dp = new int[n][k];
+        int min1 = Integer.MAX_VALUE;
+        int min2 = Integer.MAX_VALUE;
+        for (int i = 0; i < k; i++) {
+            dp[0][i] = costs[0][i];
+            if (dp[0][i] < min1) {
+                min2 = min1;
+                min1 = dp[0][i];
+            } else if (dp[0][i] < min2) {
+                min2 = dp[0][i];
+            }
+        }
+
+        for (int i = 1; i < n; i++) {
+            int newMin1 = Integer.MAX_VALUE;
+            int newMin2 = Integer.MAX_VALUE;
+            for (int j = 0; j < k; j++) {
+                if (dp[i - 1][j] == min1) {
+                    dp[i][j] = costs[i][j] + min2;
+                } else {
+                    dp[i][j] = costs[i][j] + min1;
+                }
+                if (dp[i][j] < newMin1) {
+                    newMin2 = newMin1;
+                    newMin1 = dp[i][j];
+                } else if (dp[i][j] < newMin2) {
+                    newMin2 = dp[i][j];
+                }
+            }
+            min1 = newMin1;
+            min2 = newMin2;
+        }
+        return min1;
+    }
+
+    // Painting the walls - recursion with memoization - leetcode 2742
     public int paintWalls(int[] cost, int[] time) {
         int n = cost.length;
-        long[][] dp = new long[n][n + 1]; 
+        long[][] dp = new long[n][n + 1];
         for (long[] row : dp) {
             Arrays.fill(row, -1);
         }
@@ -74,8 +144,5 @@ public class PaintHouse {
         dp[index][remaining] = Math.min(paintCurrentWall, skipCurrentWall);
         return dp[index][remaining];
     }
-
-
-
 
 }

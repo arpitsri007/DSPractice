@@ -26,12 +26,12 @@ public class BellmanFord {
 
     // why |V| - 1 times?
     // because the shortest path can have at most |V| - 1 edges
-    // proof:
-    // consider a path from source to destination
-    // the shortest path can have at most |V| - 1 edges
-    // because if there are |V| edges, then there is a cycle
-    // and we can always remove the cycle to get a shorter path
-    // and we can keep removing the cycle to get a shortest path
+        // proof:
+        // consider a path from source to destination
+        // the shortest path can have at most |V| - 1 edges
+        // because if there are |V| edges, then there is a cycle
+        // and we can always remove the cycle to get a shorter path
+        // and we can keep removing the cycle to get a shortest path
 
     // why O(V * E)?
     // because we are relaxing the edges |V| - 1 times.
@@ -40,8 +40,6 @@ public class BellmanFord {
     // Detecting negative cycle:
     // if we can still relax the edges after |V| - 1 times, then there is a negative cycle.
     // because if there is a negative cycle, then we can keep relaxing the edges to get a shorter path.
-
-    
 
     // time complexity: O(V * E)
     // space complexity: O(V)

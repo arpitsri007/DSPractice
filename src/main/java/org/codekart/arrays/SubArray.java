@@ -46,7 +46,8 @@ public class SubArray {
         for (int i = 0; i < n; i++) {
             currentSum += nums[i] == 0 ? -1 : 1;
 
-            if (map.containsKey(currentSum)) { // sum is repeated it means some part of array has sum 0
+            if (map.containsKey(currentSum)) {
+                // sum is repeated it means some part of array has sum 0
                 // i - map.get(currentSum) is the length of the subarray with sum 0
                 // Example: [1,0,1,0,1]
                 // currentSum = 0 at index 1
@@ -75,7 +76,6 @@ public class SubArray {
             }
         }
         return count;
-
     }
 
     public static boolean isAlternating(int[] nums, int i, int j) {
