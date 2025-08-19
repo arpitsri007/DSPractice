@@ -1,4 +1,4 @@
-package org.codekart.algo.dynamicProgramming.dpStrings.dpGrid;
+package org.codekart.algo.dynamicProgramming.dpGrid;
 
 import util.Pair;
 
@@ -55,8 +55,8 @@ public class MaximumNonNegative {
         int m = grid.length;
         int n = grid[0].length;
         Pair<Long, Long>[][] dp = new Pair[m][n];
-        for(int i = 0; i < m; i++) {
-            for(int j = 0; j < n; j++) {
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
                 dp[i][j] = new Pair<>(Long.MIN_VALUE, Long.MAX_VALUE);
             }
         }
@@ -65,22 +65,22 @@ public class MaximumNonNegative {
         // dp[i][j].first : maxProductPath from (0,0) to (i,j)
         // dp[i][j].second : minProductPath from (0,0) to (i,j)
 
-        dp[0][0] = new Pair<>((long)grid[0][0], (long)grid[0][0]);
+        dp[0][0] = new Pair<>((long) grid[0][0], (long) grid[0][0]);
 
-        for(int i = 1; i < m; i++) {
-            dp[i][0] = new Pair<>(dp[i-1][0].getFirst() * grid[i][0], dp[i-1][0].getSecond() * grid[i][0]);
+        for (int i = 1; i < m; i++) {
+            dp[i][0] = new Pair<>(dp[i - 1][0].getFirst() * grid[i][0], dp[i - 1][0].getSecond() * grid[i][0]);
         }
 
-        for(int j = 1; j < n; j++) {
-            dp[0][j] = new Pair<>(dp[0][j-1].getFirst() * grid[0][j], dp[0][j-1].getSecond() * grid[0][j]);
+        for (int j = 1; j < n; j++) {
+            dp[0][j] = new Pair<>(dp[0][j - 1].getFirst() * grid[0][j], dp[0][j - 1].getSecond() * grid[0][j]);
         }
 
-        for(int i = 1; i < m; i++) {
-            for(int j = 1; j < n; j++) {
-                long upMax = dp[i-1][j].getFirst() * grid[i][j];
-                long upMin = dp[i-1][j].getSecond() * grid[i][j];
-                long leftMax = dp[i][j-1].getFirst() * grid[i][j];
-                long leftMin = dp[i][j-1].getSecond() * grid[i][j];
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                long upMax = dp[i - 1][j].getFirst() * grid[i][j];
+                long upMin = dp[i - 1][j].getSecond() * grid[i][j];
+                long leftMax = dp[i][j - 1].getFirst() * grid[i][j];
+                long leftMin = dp[i][j - 1].getSecond() * grid[i][j];
 
                 long currentMax = Math.max(Math.max(upMax, upMin), Math.max(leftMax, leftMin));
                 long currentMin = Math.min(Math.min(upMax, upMin), Math.min(leftMax, leftMin));
@@ -89,9 +89,9 @@ public class MaximumNonNegative {
             }
         }
 
-        return (int) (dp[m-1][n-1].getFirst() % mod) < 0 ? -1 : (int) (dp[m-1][n-1].getFirst() % mod);
-        
-     }
+        return (int) (dp[m - 1][n - 1].getFirst() % mod) < 0 ? -1 : (int) (dp[m - 1][n - 1].getFirst() % mod);
+
+    }
 
     public static int minumumPathSumRecursion(int[][] grid) {
         int[][] dp = new int[grid.length][grid[0].length];

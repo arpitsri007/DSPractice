@@ -35,7 +35,8 @@ public class BuildSegmentTree {
     // TC - O(logn) - n is the number of elements in the array and we are visiting
     // each element almost twice.
     // SC - O(logn) - for recursion stack
-    public void updateSegmentTree(int[] arr, int[] segmentTree, int index, int left, int right, int pos, int value) {
+    public static void updateSegmentTree(int[] arr, int[] segmentTree, int index, int left, int right, int pos,
+            int value) {
         if (left == right) {
             arr[pos] = value;
             segmentTree[index] = value;
@@ -51,11 +52,45 @@ public class BuildSegmentTree {
         segmentTree[index] = segmentTree[2 * index + 1] + segmentTree[2 * index + 2]; // Range sum query
     }
 
+    /* Updating entire range of indexes in segment tree */
+    public static void updateRangeSum(int start, int end, int value, int index, int left, int right,
+            int[] segmentTree, int[] lazyTree) {
+        if (lazyTree[index] != 0) {
+            segmentTree[index] += (right - left + 1) * lazyTree[index];
+            if (left != right) {
+                lazyTree[2 * index + 1] += lazyTree[index];
+                lazyTree[2 * index + 2] += lazyTree[index];
+            }
+            lazyTree[index] = 0;
+        }
+
+        // out of bounds
+        if (start > right || end < left) {
+            return;
+        }
+
+        // update range is entirely covered within left to right range
+        if (start <= left && end >= right) {
+            segmentTree[index] += (right - left + 1) * value;
+            if (left != right) { // not a leaf node
+                lazyTree[2 * index + 1] += value;
+                lazyTree[2 * index + 2] += value;
+            }
+            return;
+        }
+
+        // partial overlap
+        int mid = (left + right) / 2;
+        updateRangeSum(start, end, value, 2 * index + 1, left, mid, segmentTree, lazyTree);
+        updateRangeSum(start, end, value, 2 * index + 2, mid + 1, right, segmentTree, lazyTree);
+        segmentTree[index] = segmentTree[2 * index + 1] + segmentTree[2 * index + 2];
+    }
+
     // Query Segment Tree
     // TC - O(logn) - n is the number of elements in the array and we are visiting
     // each element almost twice.
     // SC - O(logn) - for recursion stack
-    public int querySegmentTree(int[] arr, int[] segmentTree, int index, int startQuery, int endQuery, int left,
+    public static int findRangeSum(int[] arr, int[] segmentTree, int index, int startQuery, int endQuery, int left,
             int right) {
 
         // out of bounds
@@ -64,14 +99,15 @@ public class BuildSegmentTree {
         }
 
         // complete overlap
-        if (startQuery <= left && endQuery >= right) {
-            return segmentTree[index];
+        if (startQuery <= left && endQuery >= right) { // this node contains sum from left to right range so we can take
+                                                       // this node value for the sum
+            return segmentTree[index]; // | ---startQuery--- left ----- right --- endQuery ---|
         }
 
         // partial overlap
         int mid = (left + right) / 2;
-        int leftSum = querySegmentTree(arr, segmentTree, 2 * index + 1, startQuery, endQuery, left, mid);
-        int rightSum = querySegmentTree(arr, segmentTree, 2 * index + 2, startQuery, endQuery, mid + 1, right);
+        int leftSum = findRangeSum(arr, segmentTree, 2 * index + 1, startQuery, endQuery, left, mid);
+        int rightSum = findRangeSum(arr, segmentTree, 2 * index + 2, startQuery, endQuery, mid + 1, right);
         return leftSum + rightSum;
     }
 
@@ -81,8 +117,7 @@ public class BuildSegmentTree {
         int[] segmentTree = new int[2 * arr.length];
         buildSegmentTree(arr, segmentTree, 0, 0, arr.length - 1);
         System.out.println(Arrays.toString(segmentTree));
-        BuildSegmentTree buildSegmentTree = new BuildSegmentTree();
-        System.out.println(buildSegmentTree.querySegmentTree(arr, segmentTree, 0, 0, 2, 0, arr.length - 1));
+        System.out.println(findRangeSum(arr, segmentTree, 0, 0, 2, 0, arr.length - 1));
     }
 
 }

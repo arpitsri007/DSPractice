@@ -1,6 +1,10 @@
 package org.codekart.arrays;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SubArray {
@@ -114,4 +118,79 @@ public class SubArray {
 
         return count;
     }
+
+    // leetcode 3480 - Maximize subarrays after removing one conflicting pair
+    public static long maximizeSubarrays(int n, int[][] conflictingPairs) {
+        /*
+         * Story points
+         * 1. for all ending points in array, find the list of restricting starting
+         * points
+         * 2. make track of maxConflicting point and second maxConflicting point
+         * 3. Count valid subarrays ending at each point and also maintain a list of
+         * extra subArray if the restricting starting point and second
+         * maxConflicting point are removed.
+         * 4. for each point, if there is a restricting pair, then we can remove it and
+         * add the extra subArray to the list.
+         * 5. return the count + max element of list.
+         * 6. valid count += current point - maxConflicting point ;
+         * 7. extra count += maxConflicting point - second maxConflicting point ;
+         * 
+         */
+
+        int maxConflictingPoint = 0;
+        int secondMaxConflictingPoint = 0;
+
+        long validCount = 0;
+
+        Map<Integer, List<Integer>> conflictingPoints = new HashMap<>();
+
+        for (int[] pair : conflictingPairs) {
+            // (start, end)
+            int start = Math.min(pair[0], pair[1]);
+            int end = Math.max(pair[0], pair[1]);
+
+            conflictingPoints.computeIfAbsent(end, k -> new ArrayList<>()).add(start); // {1,2, .... start, ... ,end}
+        }
+
+        long[] extra = new long[n + 1];
+        // extra[i] = number of extra subarrays possible if the restricting starting
+        // point and second maxConflicting point are removed.
+
+        // O(n) + O(P) where P is the number of conflicting pairs
+        for (int end = 1; end <= n; end++) {
+            if (conflictingPoints.containsKey(end)) {
+                List<Integer> restrictingPoints = conflictingPoints.get(end);
+                List<Integer> sortedRestrictingPoints = getSortedRestrictingPoints(restrictingPoints, maxConflictingPoint,
+                        secondMaxConflictingPoint);
+                maxConflictingPoint = sortedRestrictingPoints.get(0);
+                secondMaxConflictingPoint = sortedRestrictingPoints.get(1);
+            }
+            validCount += end - maxConflictingPoint;
+            extra[maxConflictingPoint] += maxConflictingPoint - secondMaxConflictingPoint;
+        }
+
+        return validCount + Arrays.stream(extra).max().orElse(0L);
+    }
+
+    // O(P)
+    private static List<Integer> getSortedRestrictingPoints(List<Integer> restrictingPoints, int firstMax,
+            int secondMax) {
+
+        for (int point : restrictingPoints) {
+            if (point >= firstMax) {
+                secondMax = firstMax;
+                firstMax = point;
+            } else if (point > secondMax) {
+                secondMax = point;
+            }
+        }
+
+        return Arrays.asList(firstMax, secondMax);
+    }
+
+    public static void main(String[] args) {
+        int[][] conflictingPairs = { { 5, 7 }, { 6, 5 } };
+        System.out.println(maximizeSubarrays(10, conflictingPairs));
+    }
+
 }

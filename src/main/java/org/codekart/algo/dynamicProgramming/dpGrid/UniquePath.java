@@ -1,4 +1,4 @@
-package org.codekart.algo.dynamicProgramming.dpStrings.dpGrid;
+package org.codekart.algo.dynamicProgramming.dpGrid;
 
 public class UniquePath {
     
