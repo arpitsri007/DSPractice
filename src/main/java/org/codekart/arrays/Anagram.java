@@ -11,11 +11,14 @@ public class Anagram {
     // main me
     public static void main(String[] args) {
         Anagram anagram = new Anagram();
-        String[] strs = { "eat", "tea", "tan", "ate", "nat", "bat" };
-        //System.out.println(anagram.groupAnagrams(strs));
-        System.out.println(anagram.groupAnagramsImproved(strs));
+        // String[] strs = { "eat", "tea", "tan", "ate", "nat", "bat" };
+        // System.out.println(anagram.groupAnagrams(strs));
+        // System.out.println(anagram.groupAnagramsImproved(strs));
+        String[] words = { "abba", "baba", "bbaa", "cd", "cd" };
+        System.out.println(anagram.removeAnagrams(words));
     }
-    //leetcode 49
+
+    // leetcode 49
     public List<List<String>> groupAnagrams(String[] strs) {
         Map<String, List<String>> map = new HashMap<>();
         for (String str : strs) {
@@ -55,7 +58,7 @@ public class Anagram {
             char[] strChars = str.toCharArray();
             char[] sortedChars = new char[26];
 
-            for(char c : strChars) {
+            for (char c : strChars) {
                 sortedChars[c - 'a']++;
             }
 
@@ -63,6 +66,36 @@ public class Anagram {
             map.computeIfAbsent(sorted, k -> new ArrayList<>()).add(str);
         }
         return new ArrayList<>(map.values());
+    }
+
+    // leetcode 2273 - Find Resultant Array After Removing Anagrams
+    public List<String> removeAnagrams(String[] words) {
+        int n = words.length;
+        List<String> result = new ArrayList<>();
+
+        result.add(words[0]);
+        int i = 1;
+
+        while (i < n) {
+            if (!isAnagram(words[i], result.get(result.size() - 1))) {
+                result.add(words[i]);
+            }
+
+            i++;
+        }
+        return result;
+    }
+
+    private boolean isAnagram(String word1, String word2) {
+        int[] freq1 = new int[26];
+        int[] freq2 = new int[26];
+        for (char c : word1.toCharArray()) {
+            freq1[c - 'a']++;
+        }
+        for (char c : word2.toCharArray()) {
+            freq2[c - 'a']++;
+        }
+        return Arrays.equals(freq1, freq2);
     }
 
 }
